@@ -14,6 +14,6 @@ void main()
 	vs_color = vertex_color;
 	vs_texcoord = vec2(vertex_texcoord.x, vertex_texcoord.y * -1.f);
 
-	gl_position = vec4(vertex_position, 1.f);
+	gl_Position = vec4(vertex_position, 1.f);
 }
 

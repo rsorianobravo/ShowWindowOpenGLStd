@@ -3,7 +3,7 @@
 
 /*********************************************************************************************/
 
-// method to calculate the frameBuffer
+// ------ method to calculate the frameBuffer
 void framebuffer_resize_callback(GLFWwindow* wimdow, int fbw, int fbh)
 {
 	glViewport(0, 0, fbw, fbh);
@@ -13,8 +13,103 @@ void framebuffer_resize_callback(GLFWwindow* wimdow, int fbw, int fbh)
 
 bool loadShaders(GLuint &program)
 {
+	bool loadSuccess = true;
+
 	char infoLog[512];
-	GLuint success;
+	GLint success;
+
+	std::string temp = "";
+	std::string src = "";
+
+	std::ifstream in_file;
+
+	// ------ Vertex
+	in_file.open("vertex_core.glsl");
+
+	if (in_file.is_open())
+	{
+		while (std::getline(in_file, temp))
+			src += temp + "\n";
+	}
+	else
+	{
+		std::cout << "Error opening the vertex file" << "\n";
+		loadSuccess = false;
+	}
+
+	in_file.close();
+
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	const GLchar* vertSrc = src.c_str();
+	glShaderSource(vertexShader, 1, &vertSrc, NULL);
+	glCompileShader(vertexShader);
+
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cout << "Error compiling the vertex shader" << "\n";
+		std::cout << infoLog << "\n";
+		loadSuccess = false;
+	}
+
+
+	temp = "";
+	src = "";
+
+	// ------ Fragment
+	in_file.open("fragment_core.glsl");
+
+	if (in_file.is_open())
+	{
+		while (std::getline(in_file, temp))
+			src += temp + "\n";
+	}
+	else
+	{
+		std::cout << "Error opening the fragment file" << "\n";
+		loadSuccess = false;
+	}
+
+	in_file.close();
+
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	const GLchar* fragSrc = src.c_str();
+	glShaderSource(fragmentShader, 1, &fragSrc, NULL);
+	glCompileShader(fragmentShader);
+
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cout << "Error compiling the fragment shader" << "\n";
+		std::cout << infoLog << "\n";
+		loadSuccess = false;
+	}
+
+
+
+	// ------ Program
+	program = glCreateProgram();
+	glAttachShader(program, vertexShader);
+	glAttachShader(program, fragmentShader);
+
+	glLinkProgram(program);
+
+	glGetProgramiv(program, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(program, 512, NULL, infoLog);
+		std::cout << "Error linking the program" << "\n";
+		std::cout << infoLog << "\n";
+		loadSuccess = false;
+	}
+
+	// ------ End
+	glUseProgram(0);
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+	return loadSuccess;
 }
 /*********************************************************************************************/
 
@@ -67,7 +162,10 @@ int main()
 
 	// ------ Shader Init
 	GLuint core_program;
-	loadShaders(core_program);
+	if (!loadShaders(core_program))
+	{
+		glfwTerminate();
+	}
 
 
 	// ------ Model
@@ -102,7 +200,11 @@ int main()
 
 
 	// ------ End Program
+	glfwDestroyWindow(window);
 	glfwTerminate();
+
+	// Delete Program
+	glDeleteProgram(core_program);
 
  	return 0;
 }
