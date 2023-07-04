@@ -1,7 +1,7 @@
 #include "libs.h"
 
 
-Vertex vertices[] =
+Vertex verticesTriangle[] =
 {
 	// Position , Color, Texcoords
 
@@ -10,9 +10,26 @@ Vertex vertices[] =
 	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f)
 };
 
+Vertex vertices[] =
+{
+	// Position , Color, Texcoords
+
+	
+	glm::vec3(-0.5f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f),
+	glm::vec3(-0.5f,-0.5f,0.f), glm::vec3(0.f,1.f,0.f), glm::vec2(0.f,0.f),
+	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),
+	
+	glm::vec3(-0.5f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f),
+	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),
+	glm::vec3(0.5f,0.5f,0.f), glm::vec3(1.f,1.f,0.f), glm::vec2(0.f,0.f)
+};
+
 unsigned nrOfVertices = sizeof(vertices) / sizeof(Vertex);
 
-GLuint indices[] = { 0, 1, 2 };
+//GLuint indices[] = { 0, 1, 2, 3, 4, 5 };
+
+GLuint indices[] = { 0, 1, 2, 0, 2, 5 };
+
 
 unsigned nrOfIndices = sizeof(indices) / sizeof(GLuint);
 
@@ -263,7 +280,7 @@ int main()
 		// ------ Draw
 
 		// ------ Clear
-		glClearColor(0.345f, 0.f, 0.f, 1.f);
+		glClearColor(0.0f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		// Use a Program
