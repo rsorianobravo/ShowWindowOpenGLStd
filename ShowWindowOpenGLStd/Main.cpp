@@ -337,6 +337,11 @@ int main()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
+	glBindVertexArray(0);
+	glUseProgram(0);
+	glActiveTexture(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	// Delete Program
 	glDeleteProgram(core_program);
 
