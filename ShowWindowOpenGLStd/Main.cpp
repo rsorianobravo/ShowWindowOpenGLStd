@@ -21,7 +21,7 @@ Vertex vertices[] =
 	
 	glm::vec3(-0.5f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f),
 	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),
-	glm::vec3(0.5f,0.5f,0.f), glm::vec3(1.f,1.f,0.f), glm::vec2(0.f,0.f)
+	glm::vec3(0.5f,0.5f,0.f), glm::vec3(1.f,1.f,0.f), glm::vec2(1.f,1.f)
 };
 
 unsigned nrOfVertices = sizeof(vertices) / sizeof(Vertex);
@@ -163,8 +163,8 @@ int main()
 	glfwInit();
 
 	// ------ Create Window
-	const int WINDOW_WIDTH = 640;
-	const int WINDOW_HEIGHT = 480;
+	const int WINDOW_WIDTH = 1920;
+	const int WINDOW_HEIGHT = 1280;
 	int framebufferWidth = 0;
 	int framebufferHeight = 0;
 
@@ -266,7 +266,34 @@ int main()
 	// Bind VAO 0
 	glBindVertexArray(0);
 
+	// Texture Init
+	int image_width = 0;
+	int image_height = 0;
+	unsigned char* image = SOIL_load_image("images/pusheen.png", &image_width, &image_height, NULL, SOIL_LOAD_RGBA);
 
+	GLuint texture0;
+	glGenTextures(1, &texture0);
+	glBindTexture(GL_TEXTURE_2D, texture0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+
+	if (image)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Error Loading Texture" << "\n";
+	}
+
+	glActiveTexture(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	SOIL_free_image_data(image);
 
 	// ------ Main Loop
 	while (!glfwWindowShouldClose(window))
@@ -285,6 +312,13 @@ int main()
 
 		// Use a Program
 		glUseProgram(core_program);
+
+		// Update uniforms
+		glUniform1i(glGetUniformLocation(core_program, "texture0"), 0);
+
+		// Activate Texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture0);
 		
 		//Bind Vertex array object
 		glBindVertexArray(VAO);
