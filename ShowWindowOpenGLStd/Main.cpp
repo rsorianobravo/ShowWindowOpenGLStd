@@ -1,6 +1,14 @@
 #include "libs.h"
 
 
+Vertex vertices[] =
+{
+	// Position
+	glm::vec3(0.0f,0.5f,0.f), glm::vec3(1.f,0.f,0.f),
+	glm::vec3(-0.5f,-0.5f,0.f), glm::vec3(0.f,1.f,0.f),
+	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f),
+};
+
 /*********************************************************************************************/
 
 // ------ Talk about sending sizeof pointers and errors
