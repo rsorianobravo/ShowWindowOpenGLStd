@@ -3,11 +3,18 @@
 
 Vertex vertices[] =
 {
-	// Position
-	glm::vec3(0.0f,0.5f,0.f), glm::vec3(1.f,0.f,0.f),
-	glm::vec3(-0.5f,-0.5f,0.f), glm::vec3(0.f,1.f,0.f),
-	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f),
+	// Position , Color, Texcoords
+
+	glm::vec3(0.0f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f),
+	glm::vec3(-0.5f,-0.5f,0.f), glm::vec3(0.f,1.f,0.f), glm::vec2(0.f,0.f),
+	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f)
 };
+
+unsigned nrOfVertices = sizeof(vertices) / sizeof(Vertex);
+
+GLuint indices[] = { 0, 1, 2 };
+
+unsigned nrOfIndices = sizeof(indices) / sizeof(GLuint);
 
 /*********************************************************************************************/
 
@@ -200,16 +207,54 @@ int main()
 
 	// ------ Model
 
-	// ------ VAO VBO
+	// ------ VAO VBO EBO
+	GLuint VAO;
+	GLuint VBO;
+	GLuint EBO;
 
 
+	// ------ Gen VAO and Bind
+	glCreateVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	// ------ Gen VBO and Bind and send data
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	// ------ Gen EBO and Bind and send data
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+
+	// ------ Set Vertex Attribute Pointers and Enable
+	
+	/* If the location is not defined in the vertex core file....
+	GLuint attribLoc = glGetAttribLocation(core_program, "vertex_position");
+	glVertexAttribPointer(attribLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+	glEnableVertexAttribArray(attribLoc);
+	*/
+
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texcoord));
+	glEnableVertexAttribArray(2);
+
+	// Bind VAO 0
+	glBindVertexArray(0);
 
 
 
 	// ------ Main Loop
 	while (!glfwWindowShouldClose(window))
 	{
-		// ------ Check update input
+		// ------ Check update input 
 		//glfwSetWindowShouldClose(window, true);
 		glfwPollEvents();
 
@@ -221,7 +266,15 @@ int main()
 		glClearColor(0.345f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+		// Use a Program
+		glUseProgram(core_program);
+		
+		//Bind Vertex array object
+		glBindVertexArray(VAO);
+				
 		// ------ Draw
+		//glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
+		glDrawElements(GL_TRIANGLES, nrOfIndices, GL_UNSIGNED_INT, 0);
 
 		// ------ End Draw
 		glfwSwapBuffers(window);
