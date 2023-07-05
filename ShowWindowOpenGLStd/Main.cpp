@@ -5,9 +5,9 @@ Vertex verticesTriangle[] =
 {
 	// Position , Color, Texcoords
 
-	glm::vec3(0.0f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f),
-	glm::vec3(-0.5f,-0.5f,0.f), glm::vec3(0.f,1.f,0.f), glm::vec2(0.f,0.f),
-	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f)
+	glm::vec3(0.0f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f), glm::vec3(1.f,0.f,0.f),
+	glm::vec3(-0.5f,-0.5f,0.f), glm::vec3(0.f,1.f,0.f), glm::vec2(0.f,0.f),glm::vec3(0.f,1.f,0.f),
+	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f), glm::vec3(0.f,0.f,1.f)
 };
 
 Vertex vertices[] =
@@ -15,13 +15,13 @@ Vertex vertices[] =
 	// Position , Color, Texcoords
 
 	
-	glm::vec3(-0.5f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f),
-	glm::vec3(-0.5f,-0.5f,0.f), glm::vec3(0.f,1.f,0.f), glm::vec2(0.f,0.f),
-	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),
+	glm::vec3(-0.5f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f), glm::vec3(0.f,0.f,-1.f),
+	glm::vec3(-0.5f,-0.5f,0.f), glm::vec3(0.f,1.f,0.f), glm::vec2(0.f,0.f), glm::vec3(0.f,0.f,-1.f),
+	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),  glm::vec3(0.f,0.f,-1.f),
 	
-	glm::vec3(-0.5f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f),
-	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),
-	glm::vec3(0.5f,0.5f,0.f), glm::vec3(1.f,1.f,0.f), glm::vec2(1.f,1.f)
+	glm::vec3(-0.5f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f), glm::vec3(0.f,0.f,-1.f),
+	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),  glm::vec3(0.f,0.f,-1.f),
+	glm::vec3(0.5f,0.5f,0.f), glm::vec3(1.f,1.f,0.f), glm::vec2(1.f,1.f),   glm::vec3(0.f,0.f,-1.f)
 };
 
 unsigned nrOfVertices = sizeof(vertices) / sizeof(Vertex);
@@ -300,13 +300,18 @@ int main()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
 	glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texcoord));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texcoord));
 	glEnableVertexAttribArray(2);
+
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
+	glEnableVertexAttribArray(3);
+
+
 
 	// Bind VAO 0
 	glBindVertexArray(0);
 
-	// Texture Init
+	// Texture Init 
 
 	// Texture 0
 
