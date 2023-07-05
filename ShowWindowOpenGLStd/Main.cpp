@@ -416,7 +416,7 @@ int main()
 
 
 	// Lights
-	glm::vec3 lightPos0(0.f, 0.f, 2.f);
+	glm::vec3 lightPos0(0.f, 0.f, 1.0f);
 
 
 
