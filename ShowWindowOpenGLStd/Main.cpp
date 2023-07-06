@@ -255,6 +255,11 @@ int main()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// ------ Shader Init
+	
+	Shader test(_strdup("vertex_core.gls"), _strdup("fragment_core.glsl"), _strdup(""));
+	
+	
+	
 	GLuint core_program;
 	if (!loadShaders(core_program))
 	{
