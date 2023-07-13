@@ -92,7 +92,7 @@ void framebuffer_resize_callback(GLFWwindow* wimdow, int fbw, int fbh)
 }
 
 /*********************************************************************************************/
-
+/*
 bool loadShaders(GLuint &program)
 {
 	bool loadSuccess = true;
@@ -193,6 +193,7 @@ bool loadShaders(GLuint &program)
 	glDeleteShader(fragmentShader);
 	return loadSuccess;
 }
+*/
 /*********************************************************************************************/
 
 int main()
@@ -255,11 +256,14 @@ int main()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// ------ Shader Init
-	GLuint core_program;
-	if (!loadShaders(core_program))
-	{
-		glfwTerminate();
-	}
+	
+	Shader core_program("vertex_core.glsl", "fragment_core.glsl", "");
+
+	//GLuint core_program;
+	//if (!loadShaders(core_program))
+	//{
+	//	glfwTerminate();
+	//}
 
 
 	// ------ Model
@@ -422,16 +426,28 @@ int main()
 
 	// Init Uniforms
 
-	glUseProgram(core_program); 
+	//glUseProgram(core_program); 
+	//core_program.use();
+	
+	core_program.setMat4fv(ModelMatrix, "ModelMatrix");
+	core_program.setMat4fv(ViewMatrix, "ViewMatrix");
+	core_program.setMat4fv(ProjectionMatrix, "ProjectionMatrix");
 
+	/*
 	glUniformMatrix4fv(glGetUniformLocation(core_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
 	glUniformMatrix4fv(glGetUniformLocation(core_program, "ViewMatrix"), 1, GL_FALSE, glm::value_ptr(ViewMatrix));
 	glUniformMatrix4fv(glGetUniformLocation(core_program, "ProjectionMatrix"), 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
+	*/
 
+	core_program.setVec3f(lightPos0, "lightPos0");
+	core_program.setVec3f(camPosition, "cameraPos");
+
+	/*
 	glUniform3fv(glGetUniformLocation(core_program, "lightPos0"), 1, glm::value_ptr(lightPos0));
 	glUniform3fv(glGetUniformLocation(core_program, "cameraPos"), 1, glm::value_ptr(camPosition));
+	*/
 
-	glUseProgram(0);
+	//glUseProgram(0);
 
 	// ------ Main Loop
 	while (!glfwWindowShouldClose(window))
@@ -452,11 +468,19 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		// Use a Program
-		glUseProgram(core_program);
+		//glUseProgram(core_program);
+		core_program.use();
+
 
 		// Update uniforms
+		
+		core_program.set1i(0, "texture0");
+		core_program.set1i(1, " ");
+
+		/*
 		glUniform1i(glGetUniformLocation(core_program, "texture0"), 0);
 		glUniform1i(glGetUniformLocation(core_program, "texture1"), 1);
+		*/
 
 		// Move Rotate Scale
 		
@@ -489,15 +513,25 @@ int main()
 
 		ModelMatrix = glm::scale(ModelMatrix, scale);
 
-
+		core_program.setMat4fv(ModelMatrix, "ModelMatrix");
 
 		
-		glUniformMatrix4fv(glGetUniformLocation(core_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+		//glUniformMatrix4fv(glGetUniformLocation(core_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+
+
+
 
 		glfwGetFramebufferSize(window,&framebufferWidth, &framebufferHeight);
 		ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
 
-		glUniformMatrix4fv(glGetUniformLocation(core_program, "ProjectionMatrix"), 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
+		core_program.setMat4fv(ProjectionMatrix, "ProjectionMatrix");
+
+		//glUniformMatrix4fv(glGetUniformLocation(core_program, "ProjectionMatrix"), 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
+
+
+		// Use a Program
+		core_program.use();
+
 
 		// Activate Texture
 		glActiveTexture(GL_TEXTURE0); 
@@ -531,7 +565,7 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// Delete Program
-	glDeleteProgram(core_program);
+	//glDeleteProgram(core_program);
 
  	return 0;
 }
