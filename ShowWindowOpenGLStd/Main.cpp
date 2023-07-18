@@ -268,6 +268,9 @@ int main()
 
 	// ------ Model
 
+
+
+
 	// ------ VAO VBO EBO
 	GLuint VAO;
 	GLuint VBO;
