@@ -1,5 +1,14 @@
 #version 440
 
+struct Material
+{
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	sampler2D diffuseTex;
+	smapler2D specularTex;	
+}
+
 in vec3 vs_position;
 in vec3 vs_color;
 in vec2 vs_texcoord;
