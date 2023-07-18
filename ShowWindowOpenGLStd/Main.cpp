@@ -15,13 +15,13 @@ Vertex vertices[] =
 	// Position , Color, Texcoords
 
 	
-	glm::vec3(-0.5f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f), glm::vec3(0.f,0.f,-1.f),
-	glm::vec3(-0.5f,-0.5f,0.f), glm::vec3(0.f,1.f,0.f), glm::vec2(0.f,0.f), glm::vec3(0.f,0.f,-1.f),
-	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),  glm::vec3(0.f,0.f,-1.f),
+	glm::vec3(-0.5f,0.14f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f), glm::vec3(0.f,0.f,-1.f),
+	glm::vec3(-0.5f,-0.14f,0.f), glm::vec3(0.f,1.f,0.f), glm::vec2(0.f,0.f), glm::vec3(0.f,0.f,-1.f),
+	glm::vec3(0.5f,-0.14f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),  glm::vec3(0.f,0.f,-1.f),
 	
-	glm::vec3(-0.5f,0.5f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f), glm::vec3(0.f,0.f,-1.f),
-	glm::vec3(0.5f,-0.5f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),  glm::vec3(0.f,0.f,-1.f),
-	glm::vec3(0.5f,0.5f,0.f), glm::vec3(1.f,1.f,0.f), glm::vec2(1.f,1.f),   glm::vec3(0.f,0.f,-1.f)
+	glm::vec3(-0.5f,0.14f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f), glm::vec3(0.f,0.f,-1.f),
+	glm::vec3(0.5f,-0.14f,0.f), glm::vec3(0.f,0.f,1.f), glm::vec2(1.f,0.f),  glm::vec3(0.f,0.f,-1.f),
+	glm::vec3(0.5f,0.14f,0.f), glm::vec3(1.f,1.f,0.f), glm::vec2(1.f,1.f),   glm::vec3(0.f,0.f,-1.f)
 };
 
 unsigned nrOfVertices = sizeof(vertices) / sizeof(Vertex);
@@ -351,7 +351,7 @@ int main()
 	SOIL_free_image_data(image);
 	*/
 
-	Texture texture_0("images/pusheen.png", GL_TEXTURE_2D, 0);
+	Texture texture_0("images/Newtonlab Sin Sombra.png", GL_TEXTURE_2D, 0);
 
 
 	// Texture 1
@@ -386,6 +386,11 @@ int main()
 	*/
 	
 	Texture texture_1("images/container.png", GL_TEXTURE_2D, 1);
+
+	// Material 0
+
+	Material material0(glm::vec3(0.1f), glm::vec3(1.f,1.f,1.f), glm::vec3(1.f), texture_0.getTextureUnit(), texture_1.getTextureUnit());
+
 
 	// Init Matrices
 	glm::vec3 position(0.f);
@@ -473,7 +478,7 @@ int main()
 		// ------ Draw
 
 		// ------ Clear
-		glClearColor(0.0f, 0.f, 0.f, 1.f);
+		glClearColor(0.1f, 0.1f, 0.1f,1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		// Use a Program
@@ -491,6 +496,7 @@ int main()
 		core_program.set1i(texture_0.getTextureUnit(), "texture0");
 		core_program.set1i(texture_1.getTextureUnit(), "texture0");
 
+		material0.sendToShader(core_program);
 
 		/*
 		glUniform1i(glGetUniformLocation(core_program, "texture0"), 0);
