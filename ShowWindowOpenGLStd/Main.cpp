@@ -203,8 +203,8 @@ int main()
 	glfwInit();
 
 	// ------ Create Window
-	const int WINDOW_WIDTH = 1920;
-	const int WINDOW_HEIGHT = 1280;
+	const int WINDOW_WIDTH = 1080;
+	const int WINDOW_HEIGHT = 1920;
 	int framebufferWidth = 0;
 	int framebufferHeight = 0;
 
@@ -318,7 +318,7 @@ int main()
 	// Texture Init 
 
 	// Texture 0
-
+	/*
 	int image_width = 0;
 	int image_height = 0;
 	unsigned char* image = SOIL_load_image("images/pusheen.png", &image_width, &image_height, NULL, SOIL_LOAD_RGBA);
@@ -346,9 +346,13 @@ int main()
 	glActiveTexture(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	SOIL_free_image_data(image);
+	*/
+
+	Texture texture_0("images/pusheen.png", GL_TEXTURE_2D, 0);
+
 
 	// Texture 1
-
+	/*
 	int image_width1 = 0;
 	int image_height1 = 0;
 	unsigned char* image1 = SOIL_load_image("images/container.png", &image_width1, &image_height1, NULL, SOIL_LOAD_RGBA);
@@ -376,8 +380,10 @@ int main()
 	glActiveTexture(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	SOIL_free_image_data(image1);
-
+	*/
 	
+	Texture texture_1("images/container.png", GL_TEXTURE_2D, 1);
+
 	// Init Matrices
 	glm::vec3 position(0.f);
 	glm::vec3 rotation(0.f);
@@ -474,8 +480,14 @@ int main()
 
 		// Update uniforms
 		
+		/*
 		core_program.set1i(0, "texture0");
-		core_program.set1i(1, " ");
+		core_program.set1i(1, "texture1");
+		*/
+
+		core_program.set1i(texture_0.getTextureUnit(), "texture0");
+		core_program.set1i(texture_1.getTextureUnit(), "texture0");
+
 
 		/*
 		glUniform1i(glGetUniformLocation(core_program, "texture0"), 0);
@@ -534,12 +546,21 @@ int main()
 
 
 		// Activate Texture
-		glActiveTexture(GL_TEXTURE0); 
+		/*
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture0);
-		
+		*/
+		//texture_0.bind(0, GL_TEXTURE_2D);
+		texture_0.bind();
+
+
 		// Activate Texture 1
+		/*
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture1);
+		*/
+		//texture_1.bind(1, GL_TEXTURE_2D);
+		texture_1.bind();
 
 
 		//Bind Vertex array object
