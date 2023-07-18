@@ -52,7 +52,7 @@ public:
 		}
 
 		glActiveTexture(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(type, 0);
 		SOIL_free_image_data(image);
 	}
 
@@ -93,5 +93,39 @@ public:
 	inline GLint getTextureUnit() const
 	{
 		return this->textureUnit;
+	}
+
+	void loadFromFile(const char* fileName)
+	{
+		if (this->id)
+		{
+			glDeleteTextures(1, &this->id);
+		}
+
+		unsigned char* image = SOIL_load_image(fileName, &this->width, &this->height, NULL, SOIL_LOAD_RGBA);
+
+		//GLuint texture0;
+		glGenTextures(1, &this->id);
+		glBindTexture(this->type, this->id);
+
+		glTexParameteri(this->type, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(this->type, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(this->type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(this->type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+
+		if (image)
+		{
+			glTexImage2D(this->type, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+			glGenerateMipmap(this->type);
+		}
+		else
+		{
+			std::cout << "Error Loading Texture" << "\n";
+		}
+
+		glActiveTexture(0);
+		glBindTexture(this->type, 0);
+		SOIL_free_image_data(image);
 	}
 };
