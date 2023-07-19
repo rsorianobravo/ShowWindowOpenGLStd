@@ -13,8 +13,12 @@
 class Mesh
 {
 private:
+	
 	std::vector<Vertex> vertices;
 	std::vector <GLuint> indices;
+
+	unsigned nrOfVertices;
+	unsigned nrOfIndices;
 
 	GLuint VAO;
 	GLuint VBO;
@@ -37,6 +41,60 @@ private:
 		{
 			this->indices.push_back(indexArray[i]);
 		}
+	}
+
+	void initVAO(Vertex* vertexArray, const unsigned& nrOfVertices, GLuint* indexArray, const unsigned& nrOfIndices)
+	{
+		// ------ VAO VBO EBO
+		//GLuint VAO;
+		//GLuint VBO;
+		//GLuint EBO;
+
+		// Set Variables 
+
+		this->nrOfVertices = nrOfVertices;
+		this->nrOfIndices = nrOfIndices;
+
+		// ------ Gen VAO and Bind
+		glCreateVertexArrays(1, &this->VAO);
+		glBindVertexArray(this->VAO);
+
+		// ------ Gen VBO and Bind and send data
+		glGenBuffers(1, &this->VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+		glBufferData(GL_ARRAY_BUFFER, this->nrOfVertices * sizeof(Vertex), vertexArray, GL_STATIC_DRAW);
+
+		// ------ Gen EBO and Bind and send data
+		glGenBuffers(1, &this->EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->nrOfIndices * sizeof(GLuint), indexArray, GL_STATIC_DRAW);
+
+
+		// ------ Set Vertex Attribute Pointers and Enable
+
+		/* If the location is not defined in the vertex core file....
+		GLuint attribLoc = glGetAttribLocation(core_program, "vertex_position");
+		glVertexAttribPointer(attribLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+		glEnableVertexAttribArray(attribLoc);
+		*/
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
+		glEnableVertexAttribArray(1);
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texcoord));
+		glEnableVertexAttribArray(2);
+
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
+		glEnableVertexAttribArray(3);
+
+
+
+		// Bind VAO 0
+		glBindVertexArray(0);
 	}
 
 	void initVAO()
@@ -126,8 +184,12 @@ private:
 public:
 	Mesh(Vertex* vertexArray, const unsigned& nrOfVertices, GLuint* indexArray, const unsigned& nrOfIndices)
 	{
-		this->initVertexData(vertexArray, nrOfVertices, indexArray, nrOfIndices);
-		this->initVAO();
+		//this->initVertexData(vertexArray, nrOfVertices, indexArray, nrOfIndices);
+		//this->initVAO();
+		//this->initModelMatrix();
+
+
+		this->initVAO(vertexArray, nrOfVertices, indexArray, nrOfIndices);
 		this->initModelMatrix();
 	}
 
@@ -158,9 +220,9 @@ public:
 		// ------ Draw
 		
 		if(this->indices.empty())
-			glDrawArrays(GL_TRIANGLES, 0, this->vertices.size());
+			glDrawArrays(GL_TRIANGLES, 0, this->nrOfVertices);
 		else
-			glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, this->nrOfIndices, GL_UNSIGNED_INT, 0);
 
 
 
