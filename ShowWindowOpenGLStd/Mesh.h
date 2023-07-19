@@ -181,16 +181,44 @@ private:
 		shader->setMat4fv(this->ModelMatrix, "ModelMatrix");
 	}
 
+	void updateModelMatrix()
+	{
+		// Transformations
+		this->ModelMatrix = glm::mat4(1.f);
+
+		/*
+		ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.f, 0.f, 0.f));
+
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f));
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
+
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.f));
+		*/
+
+		this->ModelMatrix = glm::translate(this->ModelMatrix, this->position);
+
+		this->ModelMatrix = glm::rotate(this->ModelMatrix, glm::radians(this->rotation.x), glm::vec3(1.f, 0.f, 0.f));
+		this->ModelMatrix = glm::rotate(this->ModelMatrix, glm::radians(this->rotation.y), glm::vec3(0.f, 1.f, 0.f));
+		this->ModelMatrix = glm::rotate(this->ModelMatrix, glm::radians(this->rotation.z), glm::vec3(0.f, 0.f, 1.f));
+
+		this->ModelMatrix = glm::scale(this->ModelMatrix, this->scale);
+	}
+
 public:
-	Mesh(Vertex* vertexArray, const unsigned& nrOfVertices, GLuint* indexArray, const unsigned& nrOfIndices)
+	Mesh(Vertex* vertexArray, const unsigned& nrOfVertices, GLuint* indexArray, const unsigned& nrOfIndices, glm::vec3 position = glm::vec3(0.f), glm::vec3 rotation = glm::vec3(0.f), glm::vec3 scale = glm::vec3(1.f))
 	{
 		//this->initVertexData(vertexArray, nrOfVertices, indexArray, nrOfIndices);
 		//this->initVAO();
 		//this->initModelMatrix();
 
+		this->position = position;
+		this->rotation = rotation;
+		this->scale = scale;
 
 		this->initVAO(vertexArray, nrOfVertices, indexArray, nrOfIndices);
-		this->initModelMatrix();
+		//this->initModelMatrix();
+		this->updateModelMatrix();
 	}
 
 	~Mesh()
@@ -207,6 +235,9 @@ public:
 
 	void render(Shader* shader) 
 	{
+		
+		this->updateModelMatrix();
+
 		// Update Uniforms
 		this->updateUniforms(shader);
 
