@@ -1,5 +1,6 @@
 #include "libs.h"
 
+Primitive primitive();
 
 Vertex verticesTriangle[] =
 {
@@ -314,7 +315,9 @@ int main()
 
 	// ------ Model Mesh
 
-	Mesh test(vertices, nrOfVertices,indices,nrOfIndices, glm::vec3(0.f),glm::vec3(0.f),glm::vec3(1.f));
+	//Mesh mesh(vertices, nrOfVertices,indices,nrOfIndices, glm::vec3(0.f),glm::vec3(0.f),glm::vec3(1.f));
+
+	Mesh mesh(Quad().getVertices(), Quad().getNrOfVertices(), Quad().getIndices(), Quad().getNrOfIndices(), glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f));
 
 	
 	/* OLD code
@@ -533,7 +536,7 @@ int main()
 		glfwPollEvents();
 		
 		//updateInput(window, position, rotation, scale);
-		updateInput(window, test);
+		updateInput(window, mesh);
 
 
 		// ------ Update
@@ -652,7 +655,7 @@ int main()
 		
 		*/
 
-		test.render(&core_program);
+		mesh.render(&core_program);
 
 		// ------ End Draw
 		glfwSwapBuffers(window);
