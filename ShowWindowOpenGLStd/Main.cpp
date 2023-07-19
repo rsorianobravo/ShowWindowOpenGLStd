@@ -1,6 +1,8 @@
 #include "libs.h"
 
-Primitive primitive();
+Primitive primitive = Primitive();
+Quad quad = Quad();
+Triangle triangle = Triangle();
 
 Vertex verticesTriangle[] =
 {
@@ -321,9 +323,12 @@ int main()
 
 	//Mesh mesh(vertices, nrOfVertices,indices,nrOfIndices, glm::vec3(0.f),glm::vec3(0.f),glm::vec3(1.f));
 
-	Mesh mesh(Quad().getVertices(), Quad().getNrOfVertices(), Quad().getIndices(), Quad().getNrOfIndices(), glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f));
+	Mesh mesh2(Quad().getVertices(), Quad().getNrOfVertices(), Quad().getIndices(), Quad().getNrOfIndices(), glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f));
 
+	Mesh mesh(&quad, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f));
 	
+	Mesh mesh1(&triangle, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f));
+
 	/* OLD code
 	
 	// ------ VAO VBO EBO
@@ -374,7 +379,6 @@ int main()
 	glBindVertexArray(0);
 
 	*/
-
 
 
 
@@ -541,6 +545,7 @@ int main()
 		
 		//updateInput(window, position, rotation, scale);
 		updateInput(window, mesh);
+		//updateInput(window, mesh2);
 
 
 		// ------ Update
@@ -660,6 +665,8 @@ int main()
 		*/
 
 		mesh.render(&core_program);
+		//mesh2.render(&core_program);
+		mesh1.render(&core_program);
 
 		// ------ End Draw
 		glfwSwapBuffers(window);
