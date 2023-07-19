@@ -85,6 +85,52 @@ void updateInput(GLFWwindow* window, glm::vec3& position, glm::vec3& rotation, g
 
 /*********************************************************************************************/
 
+void updateInput(GLFWwindow* window, Mesh &mesh)
+{
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		mesh.move(glm::vec3(0.f, 0.f, -0.001f));
+		//position.z -= 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		mesh.move(glm::vec3(0.f, 0.f, 0.001f));
+		//position.z += 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		mesh.move(glm::vec3(-0.001f, 0.f, 0.f));
+		//position.x -= 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		mesh.move(glm::vec3(0.001f, 0.f, 0.f));
+		//position.x += 0.001f;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		mesh.rotate(glm::vec3(0.f,-0.01f,0.f));
+		//rotation.y -= 0.01f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	{
+		mesh.rotate(glm::vec3(0.f, +0.01f, 0.f));
+		//rotation.y += 0.01f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	{
+		mesh.scaleUpdate(glm::vec3(0.01f));
+		//scale += 0.01f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	{
+		mesh.scaleUpdate(glm::vec3(-0.01f));
+		//scale -= 0.01f;
+	}
+}
+/*********************************************************************************************/
+
 // ------ method to calculate the frameBuffer
 void framebuffer_resize_callback(GLFWwindow* wimdow, int fbw, int fbh)
 {
@@ -270,9 +316,9 @@ int main()
 
 	Mesh test(vertices, nrOfVertices,indices,nrOfIndices, glm::vec3(0.f),glm::vec3(0.f),glm::vec3(1.f));
 
-
-
-
+	
+	/* OLD code
+	
 	// ------ VAO VBO EBO
 	GLuint VAO;
 	GLuint VBO;
@@ -296,11 +342,11 @@ int main()
 
 	// ------ Set Vertex Attribute Pointers and Enable
 	
-	/* If the location is not defined in the vertex core file....
-	GLuint attribLoc = glGetAttribLocation(core_program, "vertex_position");
-	glVertexAttribPointer(attribLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
-	glEnableVertexAttribArray(attribLoc);
-	*/
+	//If the location is not defined in the vertex core file....
+	//GLuint attribLoc = glGetAttribLocation(core_program, "vertex_position");
+	//glVertexAttribPointer(attribLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+	//glEnableVertexAttribArray(attribLoc);
+	
 
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
@@ -319,6 +365,11 @@ int main()
 
 	// Bind VAO 0
 	glBindVertexArray(0);
+
+	*/
+
+
+
 
 	// Texture Init 
 
@@ -395,6 +446,9 @@ int main()
 
 
 	// Init Matrices
+	
+	/* OLD Code
+	
 	glm::vec3 position(0.f);
 	glm::vec3 rotation(0.f);
 	glm::vec3 scale(1.f);
@@ -402,16 +456,18 @@ int main()
 	// Transformations
 	glm::mat4 ModelMatrix(1.f);
 
-	/*
-	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.f, 0.f, 0.f));
+	
+	//ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.f, 0.f, 0.f));
 
-	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
-	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f));
-	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
+	//ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
+	//ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f));
+	//ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
 
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.f));
-	*/
+	//ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.f));
+	
 
+	
+	
 	ModelMatrix = glm::translate(ModelMatrix, position);
 
 	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(rotation.x), glm::vec3(1.f, 0.f, 0.f));
@@ -419,6 +475,8 @@ int main()
 	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(rotation.z), glm::vec3(0.f, 0.f, 1.f));
 
 	ModelMatrix = glm::scale(ModelMatrix, scale);
+
+	*/
 
 	glm::vec3 camPosition(0.f,0.f, 2.f);
 	glm::vec3 worldUp(0.f, 1.f, 0.f);
@@ -445,7 +503,9 @@ int main()
 	//glUseProgram(core_program); 
 	//core_program.use();
 	
+	/* OLD CODE
 	core_program.setMat4fv(ModelMatrix, "ModelMatrix");
+	*/
 	core_program.setMat4fv(ViewMatrix, "ViewMatrix");
 	core_program.setMat4fv(ProjectionMatrix, "ProjectionMatrix");
 
@@ -471,8 +531,9 @@ int main()
 		// ------ Check update input 
 		//glfwSetWindowShouldClose(window, true);
 		glfwPollEvents();
-		updateInput(window, position, rotation, scale);
-
+		
+		//updateInput(window, position, rotation, scale);
+		updateInput(window, test);
 
 
 		// ------ Update
@@ -526,6 +587,8 @@ int main()
 
 
 
+		/* OLD Code
+		
 		ModelMatrix = glm::mat4(1.f);
 
 		ModelMatrix = glm::translate(ModelMatrix, position);
@@ -536,13 +599,15 @@ int main()
 
 		ModelMatrix = glm::scale(ModelMatrix, scale);
 
-		core_program.setMat4fv(ModelMatrix, "ModelMatrix");
 
+
+		core_program.setMat4fv(ModelMatrix, "ModelMatrix");
+		*/
 		
 		//glUniformMatrix4fv(glGetUniformLocation(core_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
 
 
-
+		// Update Framebuffer size and projection matrix
 
 		glfwGetFramebufferSize(window,&framebufferWidth, &framebufferHeight);
 		ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
@@ -573,13 +638,19 @@ int main()
 		//texture_1.bind(1, GL_TEXTURE_2D);
 		texture_1.bind();
 
-
+		/* OLD code
 		//Bind Vertex array object
 		glBindVertexArray(VAO);
-				
+		*/
+
 		// ------ Draw
+		
+		/* OLD Draw
+		
 		glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
 		glDrawElements(GL_TRIANGLES, nrOfIndices, GL_UNSIGNED_INT, 0);
+		
+		*/
 
 		test.render(&core_program);
 

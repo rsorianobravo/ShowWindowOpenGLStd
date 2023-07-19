@@ -258,7 +258,7 @@ public:
 		this->rotation += rotation;
 	}
 
-	void scale(const glm::vec3 scale)
+	void scaleUpdate(const glm::vec3 scale)
 	{
 		this->scale += scale;
 	}
