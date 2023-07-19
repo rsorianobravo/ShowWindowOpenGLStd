@@ -22,6 +22,9 @@ private:
 	
 	// Attributes
 	GLuint id;
+	const int versionMajor;
+	const int versionMinor;
+
 
 	std::string loadShaderSource(const char* fileName)
 	{
@@ -47,6 +50,9 @@ private:
 		}
 
 		in_file.close();
+
+		std::string versionNr = std::to_string(this->versionMajor) + std::to_string(this->versionMinor)+"0";
+		src.replace(src.find("#version"), 12, ("#version " + versionNr)) << "\n";
 
 		return src;
 	}
@@ -116,7 +122,8 @@ public:
 
 	// Constructors
 
-	Shader(const char* vertexFile , const char* fragmentFile, const char* geometryFile = "")
+	Shader(const int versionMajor, const int versionMinor, const char* vertexFile , const char* fragmentFile, const char* geometryFile = "")
+		: versionMajor(versionMajor), versionMinor(versionMinor)
 	{
 		GLuint vertexShader = 0;
 		GLuint geometryShader = 0;

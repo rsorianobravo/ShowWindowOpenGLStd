@@ -249,6 +249,34 @@ bool loadShaders(GLuint &program)
 */
 /*********************************************************************************************/
 
+GLFWwindow* createWindow(const char* title, const int width, const int height, int& fbWidth, int& fbHeihgt, const int GLmajorVer, const int GLminorVer, bool resizable)
+{
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GLmajorVer);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLminorVer);
+
+	glfwWindowHint(GLFW_RESIZABLE, resizable);
+
+	// ------ macOS Compatibility
+	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+
+
+	GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
+
+	glfwGetFramebufferSize(window, &fbWidth, &fbHeihgt);
+	glfwSetFramebufferSizeCallback(window, framebuffer_resize_callback);
+	//glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
+	//glViewport(0, 0, framebufferWidth, framebufferHeight);
+
+	// ------ Important
+	glfwMakeContextCurrent(window);
+
+	return window;
+}
+
+
 int main()
 {
 
@@ -258,9 +286,14 @@ int main()
 	// ------ Create Window
 	const int WINDOW_WIDTH = 1080;
 	const int WINDOW_HEIGHT = 1920;
-	int framebufferWidth = 0;
-	int framebufferHeight = 0;
+	int framebufferWidth = WINDOW_WIDTH;
+	int framebufferHeight = WINDOW_HEIGHT;
 
+	const int GLmajorVersion = 4;
+	const int GLminorVersion = 5;
+
+
+	/* Create the function Creat Window --> change all this code for createWindow. 
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -282,6 +315,10 @@ int main()
 
 	// ------ Important
 	glfwMakeContextCurrent(window);
+
+	*/
+
+	GLFWwindow* window = createWindow("ShowWindowOpenGL", WINDOW_WIDTH, WINDOW_HEIGHT, framebufferWidth, framebufferHeight, GLmajorVersion, GLminorVersion, false);
 
 	// ------ Init Glew
 	glewExperimental = GL_TRUE;
@@ -666,7 +703,7 @@ int main()
 
 		mesh.render(&core_program);
 		//mesh2.render(&core_program);
-		mesh1.render(&core_program);
+		//mesh1.render(&core_program);
 
 		// ------ End Draw
 		glfwSwapBuffers(window);
