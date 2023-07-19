@@ -148,13 +148,19 @@ public:
 		// Update Uniforms
 		this->updateUniforms(shader);
 
+		shader->use();
+
+
 		//Bind Vertex array object
 		glBindVertexArray(this->VAO);
 
 		// Render
 		// ------ Draw
-		//glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
-		glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+		
+		if(this->indices.empty())
+			glDrawArrays(GL_TRIANGLES, 0, this->vertices.size());
+		else
+			glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
 
 
 

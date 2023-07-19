@@ -266,7 +266,9 @@ int main()
 	//}
 
 
-	// ------ Model
+	// ------ Model Mesh
+
+	Mesh test(vertices, nrOfVertices,indices,nrOfIndices);
 
 
 
@@ -576,8 +578,10 @@ int main()
 		glBindVertexArray(VAO);
 				
 		// ------ Draw
-		//glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
+		glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
 		glDrawElements(GL_TRIANGLES, nrOfIndices, GL_UNSIGNED_INT, 0);
+
+		test.render(&core_program);
 
 		// ------ End Draw
 		glfwSwapBuffers(window);
