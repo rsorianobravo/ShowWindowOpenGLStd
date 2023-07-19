@@ -347,7 +347,7 @@ int main()
 
 	// ------ Shader Init
 	
-	Shader core_program("vertex_core.glsl", "fragment_core.glsl", "");
+	Shader core_program(GLmajorVersion, GLminorVersion, "vertex_core.glsl", "fragment_core.glsl", "");
 
 	//GLuint core_program;
 	//if (!loadShaders(core_program))
