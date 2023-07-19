@@ -12,7 +12,7 @@ Vertex verticesTriangle[] =
 
 Vertex vertices[] =
 {
-	// Position , Color, Texcoords
+	// Position , Color, Texcoords, Normals
 
 	
 	glm::vec3(-0.5f,0.14f,0.f), glm::vec3(1.f,0.f,0.f), glm::vec2(0.f, 1.f), glm::vec3(0.f,0.f,1.f),
