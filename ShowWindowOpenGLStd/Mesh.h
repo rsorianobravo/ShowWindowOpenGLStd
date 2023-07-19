@@ -228,6 +228,41 @@ public:
 		glDeleteBuffers(1, &this->EBO);
 	}
 
+	// Accesors
+
+	// Modifiers
+	void setPosition(const glm::vec3 position)
+	{
+		this->position = position;
+	}
+	
+	void setRotation(const glm::vec3 rotation)
+	{
+		this->rotation = rotation;
+	}
+
+	void setScale(const glm::vec3 scale)
+	{
+		this->scale = scale;
+	}
+
+	// Functions
+
+	void move(const glm::vec3 position)
+	{
+		this->position += position;
+	}
+
+	void rotate(const glm::vec3 rotation)
+	{
+		this->rotation += rotation;
+	}
+
+	void scale(const glm::vec3 scale)
+	{
+		this->scale += scale;
+	}
+
 	void update()
 	{
 

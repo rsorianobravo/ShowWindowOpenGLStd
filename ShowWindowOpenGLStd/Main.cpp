@@ -268,7 +268,7 @@ int main()
 
 	// ------ Model Mesh
 
-	Mesh test(vertices, nrOfVertices,indices,nrOfIndices);
+	Mesh test(vertices, nrOfVertices,indices,nrOfIndices, glm::vec3(0.f),glm::vec3(0.f),glm::vec3(1.f));
 
 
 
