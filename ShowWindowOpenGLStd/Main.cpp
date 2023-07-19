@@ -597,5 +597,9 @@ int main()
 	// Delete Program
 	//glDeleteProgram(core_program);
 
+	// Delete VAO and Buffers
+
+
+
  	return 0;
 }
