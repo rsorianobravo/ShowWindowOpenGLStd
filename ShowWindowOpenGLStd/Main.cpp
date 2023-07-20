@@ -138,11 +138,13 @@ void updateInput(GLFWwindow* window, Mesh &mesh)
 }
 /*********************************************************************************************/
 
+/* Copy to the ShowWindow Class
 // ------ method to calculate the frameBuffer
 void framebuffer_resize_callback(GLFWwindow* wimdow, int fbw, int fbh)
 {
 	glViewport(0, 0, fbw, fbh);
 }
+*/
 
 /*********************************************************************************************/
 /*
@@ -266,7 +268,7 @@ GLFWwindow* createWindow(const char* title, const int width, const int height, i
 	GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
 
 	glfwGetFramebufferSize(window, &fbWidth, &fbHeihgt);
-	glfwSetFramebufferSizeCallback(window, framebuffer_resize_callback);
+	glfwSetFramebufferSizeCallback(window, ShowWindow::framebuffer_resize_callback);
 	//glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
 	//glViewport(0, 0, framebufferWidth, framebufferHeight);
 
