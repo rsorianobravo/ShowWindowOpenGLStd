@@ -31,6 +31,9 @@ private:
 	
 	void initGLEW(); // --> Important after context Creation
 
+	void initOpenGLOptions();
+
+
 	//Static variables
 
 public:
@@ -42,8 +45,13 @@ public:
 	virtual ~ShowWindow();
 
 	//Accesors
+	int getWindowShouldClose();
+
 
 	//Modifiers
+
+	void setWindowShouldClose();
+
 
 	//Functions
 	void update();

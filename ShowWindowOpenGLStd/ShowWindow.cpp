@@ -3,11 +3,17 @@
 
 
 
+
 //Private Functions
 void ShowWindow::initGLFW()
 {
 	//Init GLFW
-	glfwInit();
+	if (glfwInit() == GLFW_FALSE)
+	{
+		std::cout << "ERROR::GLFW_INIT FAILED" << "\n";
+		glfwTerminate();
+	}
+		
 }
 
 void ShowWindow::initWindow(const char* title, bool resizable)
@@ -24,15 +30,53 @@ void ShowWindow::initWindow(const char* title, bool resizable)
 
 
 
-	GLFWwindow* window = glfwCreateWindow(this->WINDOW_WIDTH, this->WINDOW_HEIGHT, title, NULL, NULL);
+	this->window = glfwCreateWindow(this->WINDOW_WIDTH, this->WINDOW_HEIGHT, title, NULL, NULL);
 
-	glfwGetFramebufferSize(window, &this->framebufferWidth, &this->framebufferHeight);
+	if (this->window == nullptr)
+	{
+		std::cout << "ERROR::GLFW_WINDOW_INIT FAILED" << "\n";
+		glfwTerminate();
+	}
+
+
+	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
 	glfwSetFramebufferSizeCallback(window, ShowWindow::framebuffer_resize_callback);
 	//glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
 	//glViewport(0, 0, framebufferWidth, framebufferHeight);
 
 	// ------ Important
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(this->window);
+}
+
+void ShowWindow::initGLEW()
+{
+	// ------ Init Glew
+	glewExperimental = GL_TRUE;
+
+	// ------ Check the init status of Glew 
+	if (glewInit() != GLEW_OK)
+	{
+		std::cout << "ERROR::GLEW INIT" << "\n";
+		glfwTerminate();
+	}
+	else
+	{
+
+	}
+}
+
+void ShowWindow::initOpenGLOptions()
+{
+	// ------ OpenGL Options
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 //Constructors
@@ -45,12 +89,39 @@ ShowWindow::ShowWindow(const char* title, const int WINDOW_WIDTH, const int WIND
 	this->framebufferWidth = this->WINDOW_WIDTH;
 	this->framebufferHeight = this->WINDOW_HEIGHT;
 	
+	this->initGLFW();
 	this->initWindow(title, resizable);
+	this->initGLEW();
+	this->initOpenGLOptions();
 }
 
 ShowWindow::~ShowWindow()
 {
+	glfwDestroyWindow(this->window);
+	glfwTerminate();
+}
 
+
+
+int ShowWindow::getWindowShouldClose()
+{
+	
+	return glfwWindowShouldClose(this->window);
+}
+
+void ShowWindow::setWindowShouldClose()
+{
+	glfwSetWindowShouldClose(this->window, GLFW_TRUE);
+}
+
+void ShowWindow::update()
+{
+
+}
+
+void ShowWindow::render()
+{
+	 
 }
 
 // General Functions
@@ -60,4 +131,6 @@ void ShowWindow::framebuffer_resize_callback(GLFWwindow* wimdow, int fbw, int fb
 {
 	glViewport(0, 0, fbw, fbh);
 }
+
+
 
