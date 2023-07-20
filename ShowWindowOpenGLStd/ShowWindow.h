@@ -27,6 +27,7 @@ private:
 	glm::vec3 camPosition;
 	glm::vec3 worldUp;
 	glm::vec3 camFront;
+
 	glm::mat4 ProjectionMatrix;
 
 	float fov;
