@@ -22,6 +22,16 @@ private:
 	const int GL_VERSION_MAJOR;
 	const int GL_VERSION_MINOR;
 
+	//Matrices
+	glm::mat4 ViewMatrix;
+	glm::vec3 camPosition;
+	glm::vec3 worldUp;
+	glm::vec3 camFront;
+	glm::mat4 ProjectionMatrix;
+
+	float fov;
+	float nearPlane;
+	float farPlane;
 
 	//Private Functions
 	void initGLFW();
@@ -33,6 +43,7 @@ private:
 
 	void initOpenGLOptions();
 
+	void initMatrices();
 
 	//Static variables
 
