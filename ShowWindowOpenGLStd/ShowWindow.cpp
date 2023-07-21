@@ -186,7 +186,7 @@ void ShowWindow::update()
 	// ------ Check update input 
 	glfwPollEvents();
 
-	this->updateInput(this->window, *this->meshers[MESH_CONTAINER]);
+	this->updateInput(this->window, *this->meshers[MESH_QUAD]);
 }
 
 /******************************************************************/
