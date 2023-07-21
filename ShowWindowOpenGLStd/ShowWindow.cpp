@@ -1,6 +1,7 @@
 #include "ShowWindow.h"
 
 Quad quad = Quad();
+Quad quad2 = Quad();
 Triangle triangle = Triangle();
 
 
@@ -168,12 +169,14 @@ void ShowWindow::update()
 	// Update input
 	// ------ Check update input 
 	glfwPollEvents();
+
+	this->updateInput(this->window, *this->meshers[MESH_QUAD]);
 }
 
 /******************************************************************/
 
 // ------ Update
-
+//updateInput(this->window)
 // ------ Draw
 
 // ------ Clear
@@ -200,7 +203,7 @@ void ShowWindow::update()
 void ShowWindow::render()
 {
 
-	// ------ Update
+	// ------ Update 
 
 	// ------ Draw
 
@@ -211,33 +214,23 @@ void ShowWindow::render()
 	// Use a Program
 
 	// Update uniforms
-
-	this->shaders[SHADER_CORE_PROGRAM]->set1i(this->textures[TEX_NEWTON0]->getTextureUnit(), "texture0");
-	this->shaders[SHADER_CORE_PROGRAM]->set1i(this->textures[TEX_CONTAINER1]->getTextureUnit(), "texture1");
-
-	this->materials[MAT_1]->sendToShader(*this->shaders[SHADER_CORE_PROGRAM]);
-
-	// Move Rotate Scale
-	
-	// Update Framebuffer size and projection matrix
-
-	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
-	ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
-
-	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(ProjectionMatrix, "ProjectionMatrix");
+	this->updteUniforms();
 
 	// Use a Program
 	this->shaders[SHADER_CORE_PROGRAM]->use();
 
 	// Activate Texture
 
-	this->textures[TEX_NEWTON0]->bind();
+	this->textures[TEX_NEWTON0]->bind(0);
 	// Activate Texture 1
-	this->textures[TEX_CONTAINER1]->bind();
+	this->textures[TEX_CONTAINER1]->bind(1);
 
 	// ------ Draw
 	
 	this->meshers[MESH_QUAD]->render(this->shaders[SHADER_CORE_PROGRAM]);
+
+	this->textures[TEX_CONTAINER1]->bind(0);
+	this->meshers[MESH_CONTAINER]->render(this->shaders[SHADER_CORE_PROGRAM]);
 
 	// ------ End Draw
 	glfwSwapBuffers(window);
@@ -259,6 +252,105 @@ void ShowWindow::framebuffer_resize_callback(GLFWwindow* wimdow, int fbw, int fb
 	glViewport(0, 0, fbw, fbh);
 }
 
+/*********************************************************************************************/
+
+// ------ Talk about sending sizeof pointers and errors
+void updateInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	}
+}
+
+/****************************************** OLD ***************************************************/
+
+void ShowWindow::updateInput(GLFWwindow* window, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale)
+{
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		position.z -= 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		position.z += 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		position.x -= 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		position.x += 0.001f;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		rotation.y -= 0.01f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	{
+		rotation.y += 0.01f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	{
+		scale += 0.01f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	{
+		scale -= 0.01f;
+	}
+}
+
+/*********************************************************************************************/
+
+void ShowWindow::updateInput(GLFWwindow* window, Mesh &mesh)
+{
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		mesh.move(glm::vec3(0.f, 0.f, -0.001f));
+		//position.z -= 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		mesh.move(glm::vec3(0.f, 0.f, 0.001f));
+		//position.z += 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		mesh.move(glm::vec3(-0.001f, 0.f, 0.f));
+		//position.x -= 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		mesh.move(glm::vec3(0.001f, 0.f, 0.f));
+		//position.x += 0.001f;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		mesh.rotate(glm::vec3(0.f, -0.01f, 0.f));
+		//rotation.y -= 0.01f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	{
+		mesh.rotate(glm::vec3(0.f, +0.01f, 0.f));
+		//rotation.y += 0.01f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	{
+		mesh.scaleUpdate(glm::vec3(0.01f));
+		//scale += 0.01f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	{
+		mesh.scaleUpdate(glm::vec3(-0.01f));
+		//scale -= 0.01f;
+	}
+}
+
+/*********************************************************************************************/
+
 
 void ShowWindow::initShaders()
 {
@@ -273,19 +365,19 @@ void ShowWindow::initTextures()
 
 	// Texture 0
 
-	this->textures.push_back(new Texture("images/Newtonlab Sin Sombra.png", GL_TEXTURE_2D, 0));
+	this->textures.push_back(new Texture("images/Newtonlab Sin Sombra.png", GL_TEXTURE_2D));
 
 
 	// Texture 1
 
-	this->textures.push_back(new Texture("images/container.png", GL_TEXTURE_2D, 1));
+	this->textures.push_back(new Texture("images/container.png", GL_TEXTURE_2D));
 }
 
 void ShowWindow::initMaterials()
 {
 	// Material 0
 
-	this->materials.push_back(new Material(glm::vec3(0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(1.f), this->textures[TEX_NEWTON0]->getTextureUnit(), this->textures[TEX_CONTAINER1]->getTextureUnit()));
+	this->materials.push_back(new Material(glm::vec3(0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(1.f), 0, 1));
 
 }
 
@@ -302,6 +394,10 @@ void ShowWindow::initMeshes()
 	//Mesh mesh1(&triangle, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f));
 
 	this->meshers.push_back(new Mesh(&quad, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
+
+	this->meshers.push_back(new Mesh(&quad2, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
+
+
 }
 
 void ShowWindow::initLights()
@@ -320,6 +416,26 @@ void ShowWindow::initUniforms()
 
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(*this->lights[0], "lightPos0");
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->camPosition, "cameraPos");
+}
+
+void ShowWindow::updteUniforms()
+{
+	// Update uniforms
+
+	//this->shaders[SHADER_CORE_PROGRAM]->set1i(this->textures[TEX_NEWTON0]->getTextureUnit(), "texture0");
+	//this->shaders[SHADER_CORE_PROGRAM]->set1i(this->textures[TEX_CONTAINER1]->getTextureUnit(), "texture1");
+
+	this->materials[MAT_1]->sendToShader(*this->shaders[SHADER_CORE_PROGRAM]);
+
+	// Move Rotate Scale
+
+	// Update Framebuffer size and projection matrix
+
+	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
+	ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
+
+	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(ProjectionMatrix, "ProjectionMatrix");
+
 }
 
 

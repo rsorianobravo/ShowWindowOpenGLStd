@@ -19,7 +19,8 @@ enum material_enum
 };
 enum mesh_enum
 {
-	MESH_QUAD = 0
+	MESH_QUAD = 0,
+	MESH_CONTAINER = 1
 };
 
 class ShowWindow
@@ -90,6 +91,8 @@ private:
 
 	void initUniforms();
 
+	void updteUniforms();
+
 	//Static variables
 
 public:
@@ -115,6 +118,11 @@ public:
 
 	//Static Functions
 	static void framebuffer_resize_callback(GLFWwindow* wimdow, int fbw, int fbh);
+	static void updateInput(GLFWwindow* window);
+	static void updateInput(GLFWwindow* window, Mesh& mesh);
+	static void updateInput(GLFWwindow* window, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale);
+	
+	
 
 };
 

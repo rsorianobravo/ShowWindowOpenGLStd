@@ -44,6 +44,7 @@ unsigned nrOfIndices = sizeof(indices) / sizeof(GLuint);
 
 /*********************************************************************************************/
 
+/*
 // ------ Talk about sending sizeof pointers and errors
 void updateInput(GLFWwindow* window)
 {
@@ -52,9 +53,9 @@ void updateInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
 }
-
+*/
 /*********************************************************************************************/
-
+/*
 void updateInput(GLFWwindow* window, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale)
 {
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -91,9 +92,9 @@ void updateInput(GLFWwindow* window, glm::vec3& position, glm::vec3& rotation, g
 		scale -= 0.01f;
 	}
 }
-
+*/
 /*********************************************************************************************/
-
+/*
 void updateInput(GLFWwindow* window, Mesh &mesh)
 {
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -138,6 +139,7 @@ void updateInput(GLFWwindow* window, Mesh &mesh)
 		//scale -= 0.01f;
 	}
 }
+*/
 /*********************************************************************************************/
 
 /* Copy to the ShowWindow Class
@@ -306,9 +308,6 @@ int main()
 		// ------ Check update input 
 		showWindow.update();
 		showWindow.render();
-
-
-
 	}
 
 
