@@ -234,7 +234,7 @@ void ShowWindow::render()
 
 	this->textures[TEX_CONTAINER]->bind(0);
 	this->textures[TEX_CONTAINERS]->bind(1);
-	this->meshers[MESH_CONTAINER]->render(this->shaders[SHADER_CORE_PROGRAM]);
+	//this->meshers[MESH_CONTAINER]->render(this->shaders[SHADER_CORE_PROGRAM]);
 
 	// ------ End Draw
 	glfwSwapBuffers(window);
@@ -331,7 +331,16 @@ void ShowWindow::updateInput(GLFWwindow* window, Mesh &mesh)
 		mesh.move(glm::vec3(0.001f, 0.f, 0.f));
 		//position.x += 0.001f;
 	}
-
+	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+	{
+		mesh.move(glm::vec3(0.f, 0.001f, 0.f));
+		//position.x += 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+	{
+		mesh.move(glm::vec3(0.f, -0.001f, 0.f));
+		//position.x += 0.001f;
+	}
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 	{
 		mesh.rotate(glm::vec3(0.f, -0.01f, 0.f));
