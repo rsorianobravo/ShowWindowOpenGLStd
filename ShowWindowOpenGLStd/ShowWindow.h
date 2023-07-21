@@ -3,7 +3,24 @@
 #include "libs.h"
 
 
+// Enummss
 
+enum shader_enum 
+{ 
+	SHADER_CORE_PROGRAM = 0 
+};
+enum texture_enum 
+{ 
+	TEX_NEWTON0 = 0, TEX_CONTAINER1 = 1
+};
+enum material_enum
+{
+	MAT_1 = 0
+};
+enum mesh_enum
+{
+	MESH_QUAD = 0
+};
 
 class ShowWindow
 {
@@ -34,6 +51,21 @@ private:
 	float nearPlane;
 	float farPlane;
 
+	// Shaders
+	std::vector<Shader*> shaders;
+
+	//Textures
+	std::vector<Texture*> textures;
+
+	//Materials
+	std::vector<Material*> materials;
+
+	//Meshers
+	std::vector<Mesh*> meshers;
+
+	//Lights
+	std::vector<glm::vec3*> lights;
+
 	//Private Functions
 	void initGLFW();
 
@@ -45,6 +77,18 @@ private:
 	void initOpenGLOptions();
 
 	void initMatrices();
+
+	void initShaders();
+
+	void initTextures();
+
+	void initMaterials();
+
+	void initMeshes();
+
+	void initLights();
+
+	void initUniforms();
 
 	//Static variables
 
