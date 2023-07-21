@@ -186,7 +186,7 @@ void ShowWindow::update()
 	// ------ Check update input 
 	glfwPollEvents();
 
-	this->updateInput(this->window, *this->meshers[MESH_QUAD]);
+	this->updateInput(this->window, *this->meshers[MESH_CONTAINER]);
 }
 
 /******************************************************************/
@@ -210,21 +210,31 @@ void ShowWindow::render()
 	// Update uniforms
 	this->updteUniforms();
 
+	// Update uniforms
+
+		//this->shaders[SHADER_CORE_PROGRAM]->set1i(this->textures[TEX_NEWTON0]->getTextureUnit(), "texture0");
+		//this->shaders[SHADER_CORE_PROGRAM]->set1i(this->textures[TEX_CONTAINER1]->getTextureUnit(), "texture1");
+
+	this->materials[MAT_1]->sendToShader(*this->shaders[SHADER_CORE_PROGRAM]);
+
 	// Use a Program
 	this->shaders[SHADER_CORE_PROGRAM]->use();
 
 	// Activate Texture
 
-	this->textures[TEX_NEWTON0]->bind(0);
+	this->textures[TEX_NEWTON]->bind(0);
+	this->textures[TEX_NEWTONS]->bind(1);
+
 	// Activate Texture 1
-	this->textures[TEX_CONTAINER1]->bind(1);
+	this->textures[TEX_CONTAINER]->bind(2);
 
 	// ------ Draw
 	
 	this->meshers[MESH_QUAD]->render(this->shaders[SHADER_CORE_PROGRAM]);
 
-	//this->textures[TEX_CONTAINER1]->bind(0);
-	//this->meshers[MESH_CONTAINER]->render(this->shaders[SHADER_CORE_PROGRAM]);
+	this->textures[TEX_CONTAINER]->bind(0);
+	this->textures[TEX_CONTAINERS]->bind(1);
+	this->meshers[MESH_CONTAINER]->render(this->shaders[SHADER_CORE_PROGRAM]);
 
 	// ------ End Draw
 	glfwSwapBuffers(window);
@@ -363,11 +373,14 @@ void ShowWindow::initTextures()
 	// Texture 0
 
 	this->textures.push_back(new Texture("images/Newtonlab Sin Sombra.png", GL_TEXTURE_2D));
+	this->textures.push_back(new Texture("images/Newtonlab Sin Sombras.png", GL_TEXTURE_2D));
 
 
 	// Texture 1
 
 	this->textures.push_back(new Texture("images/container.png", GL_TEXTURE_2D));
+	this->textures.push_back(new Texture("images/containers.png", GL_TEXTURE_2D));
+
 }
 
 /*********************************************************************************************/
@@ -427,12 +440,7 @@ void ShowWindow::initUniforms()
 
 void ShowWindow::updteUniforms()
 {
-	// Update uniforms
 
-	//this->shaders[SHADER_CORE_PROGRAM]->set1i(this->textures[TEX_NEWTON0]->getTextureUnit(), "texture0");
-	//this->shaders[SHADER_CORE_PROGRAM]->set1i(this->textures[TEX_CONTAINER1]->getTextureUnit(), "texture1");
-
-	this->materials[MAT_1]->sendToShader(*this->shaders[SHADER_CORE_PROGRAM]);
 
 	// Move Rotate Scale
 

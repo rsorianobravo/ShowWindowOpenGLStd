@@ -11,7 +11,7 @@ enum shader_enum
 };
 enum texture_enum 
 { 
-	TEX_NEWTON0 = 0, TEX_CONTAINER1 = 1
+	TEX_NEWTON = 0, TEX_NEWTONS = 1, TEX_CONTAINER = 2, TEX_CONTAINERS = 3
 };
 enum material_enum
 {
