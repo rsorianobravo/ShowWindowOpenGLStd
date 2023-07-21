@@ -5,6 +5,7 @@ Quad quad2 = Quad();
 Triangle triangle = Triangle();
 
 
+/*********************************************************************************************/
 
 //Private Functions
 void ShowWindow::initGLFW()
@@ -17,6 +18,7 @@ void ShowWindow::initGLFW()
 	}
 		
 }
+/*********************************************************************************************/
 
 void ShowWindow::initWindow(const char* title, bool resizable)
 {
@@ -50,6 +52,8 @@ void ShowWindow::initWindow(const char* title, bool resizable)
 	glfwMakeContextCurrent(this->window);
 }
 
+/*********************************************************************************************/
+
 void ShowWindow::initGLEW()
 {
 	// ------ Init Glew
@@ -67,6 +71,8 @@ void ShowWindow::initGLEW()
 	}
 }
 
+/*********************************************************************************************/
+
 void ShowWindow::initOpenGLOptions()
 {
 	// ------ OpenGL Options
@@ -81,6 +87,8 @@ void ShowWindow::initOpenGLOptions()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
+/*********************************************************************************************/
+
 void ShowWindow::initMatrices()
 {
 	this->ViewMatrix = glm::mat4(1.f);
@@ -92,6 +100,8 @@ void ShowWindow::initMatrices()
 }
 
 //Constructors
+
+/*********************************************************************************************/
 
 ShowWindow::ShowWindow(const char* title, const int WINDOW_WIDTH, const int WINDOW_HEIGHT, const int GL_VERSION_MAJOR, const int GL_VERSION_MINOR, bool resizable)
 	:WINDOW_WIDTH(WINDOW_WIDTH), WINDOW_HEIGHT(WINDOW_HEIGHT), GL_VERSION_MAJOR(GL_VERSION_MAJOR), GL_VERSION_MINOR(GL_VERSION_MINOR)
@@ -125,6 +135,8 @@ ShowWindow::ShowWindow(const char* title, const int WINDOW_WIDTH, const int WIND
 
 }
 
+/*********************************************************************************************/
+
 ShowWindow::~ShowWindow()
 {
 	glfwDestroyWindow(this->window);
@@ -151,7 +163,7 @@ ShowWindow::~ShowWindow()
 	}
 }
 
-
+/*********************************************************************************************/
 
 int ShowWindow::getWindowShouldClose()
 {
@@ -159,10 +171,14 @@ int ShowWindow::getWindowShouldClose()
 	return glfwWindowShouldClose(this->window);
 }
 
+/*********************************************************************************************/
+
 void ShowWindow::setWindowShouldClose()
 {
 	glfwSetWindowShouldClose(this->window, GLFW_TRUE);
 }
+
+/*********************************************************************************************/
 
 void ShowWindow::update()
 {
@@ -175,30 +191,8 @@ void ShowWindow::update()
 
 /******************************************************************/
 
-// ------ Update
-//updateInput(this->window)
-// ------ Draw
-
-// ------ Clear
-
-// Use a Program
-
-// Update uniforms
-
-// Move Rotate Scale
-
-// Update Framebuffer size and projection matrix
-
-// Use a Program
-
-// Activate Texture
-
-// ------ Draw
-
-// ------ End Draw
 
 /******************************************************************/
-
 
 void ShowWindow::render()
 {
@@ -229,8 +223,8 @@ void ShowWindow::render()
 	
 	this->meshers[MESH_QUAD]->render(this->shaders[SHADER_CORE_PROGRAM]);
 
-	this->textures[TEX_CONTAINER1]->bind(0);
-	this->meshers[MESH_CONTAINER]->render(this->shaders[SHADER_CORE_PROGRAM]);
+	//this->textures[TEX_CONTAINER1]->bind(0);
+	//this->meshers[MESH_CONTAINER]->render(this->shaders[SHADER_CORE_PROGRAM]);
 
 	// ------ End Draw
 	glfwSwapBuffers(window);
@@ -243,6 +237,7 @@ void ShowWindow::render()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+/*********************************************************************************************/
 
 // General Functions
 // 
@@ -359,6 +354,8 @@ void ShowWindow::initShaders()
 	this->shaders.push_back(new Shader(this->GL_VERSION_MAJOR, this->GL_VERSION_MINOR, "vertex_core.glsl", "fragment_core.glsl", ""));
 }
 
+/*********************************************************************************************/
+
 void ShowWindow::initTextures()
 {
 	// Texture Init 
@@ -373,6 +370,8 @@ void ShowWindow::initTextures()
 	this->textures.push_back(new Texture("images/container.png", GL_TEXTURE_2D));
 }
 
+/*********************************************************************************************/
+
 void ShowWindow::initMaterials()
 {
 	// Material 0
@@ -380,6 +379,8 @@ void ShowWindow::initMaterials()
 	this->materials.push_back(new Material(glm::vec3(0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(1.f), 0, 1));
 
 }
+
+/*********************************************************************************************/
 
 void ShowWindow::initMeshes()
 {
@@ -400,10 +401,14 @@ void ShowWindow::initMeshes()
 
 }
 
+/*********************************************************************************************/
+
 void ShowWindow::initLights()
 {
 	this->lights.push_back(new glm::vec3(0.f, 0.f, 2.0f));
 }
+
+/*********************************************************************************************/
 
 void ShowWindow::initUniforms()
 {
@@ -417,6 +422,8 @@ void ShowWindow::initUniforms()
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(*this->lights[0], "lightPos0");
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->camPosition, "cameraPos");
 }
+
+/*********************************************************************************************/
 
 void ShowWindow::updteUniforms()
 {
@@ -437,6 +444,8 @@ void ShowWindow::updteUniforms()
 	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(ProjectionMatrix, "ProjectionMatrix");
 
 }
+/*********************************************************************************************/
+
 
 
 
