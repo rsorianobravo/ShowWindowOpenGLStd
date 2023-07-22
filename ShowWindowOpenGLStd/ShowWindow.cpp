@@ -3,6 +3,7 @@
 Quad quad = Quad();
 Quad quad2 = Quad();
 Triangle triangle = Triangle();
+Pyramid pyramid = Pyramid();
 
 
 /*********************************************************************************************/
@@ -186,7 +187,7 @@ void ShowWindow::update()
 	// ------ Check update input 
 	glfwPollEvents();
 
-	this->updateInput(this->window, *this->meshers[MESH_QUAD]);
+	this->updateInput(this->window, *this->meshers[MESH_CONTAINER]);
 }
 
 /******************************************************************/
@@ -234,7 +235,7 @@ void ShowWindow::render()
 
 	this->textures[TEX_CONTAINER]->bind(0);
 	this->textures[TEX_CONTAINERS]->bind(1);
-	//this->meshers[MESH_CONTAINER]->render(this->shaders[SHADER_CORE_PROGRAM]);
+	this->meshers[MESH_CONTAINER]->render(this->shaders[SHADER_CORE_PROGRAM]);
 
 	// ------ End Draw
 	glfwSwapBuffers(window);
@@ -418,7 +419,9 @@ void ShowWindow::initMeshes()
 
 	this->meshers.push_back(new Mesh(&quad, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
 
-	this->meshers.push_back(new Mesh(&quad2, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
+	//this->meshers.push_back(new Mesh(&quad2, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
+
+	this->meshers.push_back(new Mesh(&pyramid, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
 
 
 }
