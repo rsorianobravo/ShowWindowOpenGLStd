@@ -40,6 +40,20 @@ private:
 	const int GL_VERSION_MAJOR;
 	const int GL_VERSION_MINOR;
 
+	// Delta time
+	float dt;
+	float curTime;
+	float lastTime;
+
+	// Mouse input
+	double lastMouseX;
+	double lastMouseY;
+	double mouseX;
+	double mouseY;
+	double mouseOffsetX;
+	double mouseOffsetY;
+	bool firstMouse;
+
 	//Matrices
 	glm::mat4 ViewMatrix;
 	glm::vec3 camPosition;
