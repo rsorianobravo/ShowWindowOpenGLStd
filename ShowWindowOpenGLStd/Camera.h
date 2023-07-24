@@ -19,7 +19,7 @@
 #include<glm/gtc/type_ptr.hpp>
 
 enum direction {FORWARD = 0, BACKWARD = 1, LEFT = 2, RIGHT = 3};
-
+//
 class Camera
 {
 private:
