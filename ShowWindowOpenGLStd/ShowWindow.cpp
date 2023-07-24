@@ -213,6 +213,9 @@ void ShowWindow::update()
 
 	std::cout << "DT : " << this->dt << "\n" << " OffsetX :" << this->mouseOffsetX << " OffsetY: " << this->mouseOffsetY << "\n";
 
+	//this->meshers[0]->rotate(glm::vec3(0.f, 0.01f, 0.f));
+	//this->meshers[1]->rotate(glm::vec3(0.f, 0.01f, 0.f));
+
 }
 
 /******************************************************************/
