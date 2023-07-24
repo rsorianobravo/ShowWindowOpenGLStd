@@ -141,6 +141,8 @@ public:
 
 	void updateInputCamera();
 
+	void updateDt();
+
 
 	
 

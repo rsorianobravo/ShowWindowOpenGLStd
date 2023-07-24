@@ -128,6 +128,18 @@ ShowWindow::ShowWindow(const char* title, const int WINDOW_WIDTH, const int WIND
 	this->nearPlane = 0.1f;
 	this->farPlane = 1000.f;
 
+	this->dt = 0.f;
+	this->curTime = 0.f;
+	this->lastTime = 0.f;
+
+	this->lastMouseX = 0.0;
+	this->lastMouseY = 0.0;
+	this->mouseX = 0.0;
+	this->mouseY = 0.0;
+	this->mouseOffsetX = 0.0;
+	this->mouseOffsetY = 0.0;
+	this->firstMouse = true;
+
 	this->initGLFW();
 	this->initWindow(title, resizable);
 	this->initGLEW();
@@ -193,8 +205,14 @@ void ShowWindow::update()
 	// ------ Check update input 
 	glfwPollEvents();
 
+	this->updateDt();
+
 	this->updateInput(this->window, *this->meshers[MESH_CONTAINER]);
 	this->updateInputCamera();
+	this->updateMouseInput();
+
+	std::cout << "DT : " << this->dt << "\n" << " OffsetX :" << this->mouseOffsetX << " OffsetY: " << this->mouseOffsetY << "\n";
+
 }
 
 /******************************************************************/
@@ -389,9 +407,35 @@ void ShowWindow::updateInputCamera()
 	
 }
 
+/*********************************************************************************************/
+
+void ShowWindow::updateDt()
+{
+	this->curTime = static_cast<float>(glfwGetTime());
+	this->dt = this->curTime - this->lastTime;
+	this->lastTime = this->curTime;
+}
+
+/*********************************************************************************************/
+
 void ShowWindow::updateMouseInput()
 {
-	
+	glfwGetCursorPos(this->window, &this->mouseX, &this->mouseY);
+
+	if (this->firstMouse)
+	{
+		this->lastMouseX = this->mouseX;
+		this->lastMouseY = this->mouseY;
+		this->firstMouse = false;
+	}
+
+	//Call offset
+	this->mouseOffsetX = this->mouseX - this->lastMouseX;
+	this->mouseOffsetY = this->lastMouseY - this->mouseY;
+
+	//Set last X and Y
+	this->lastMouseX = this->mouseX;
+	this->lastMouseY = this->mouseY;
 }
 
 /*********************************************************************************************/
