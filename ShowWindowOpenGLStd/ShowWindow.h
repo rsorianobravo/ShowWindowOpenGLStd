@@ -93,6 +93,8 @@ private:
 
 	void updteUniforms();
 
+	void updteUniformsCameraView();
+
 	//Static variables
 
 public:
@@ -121,7 +123,11 @@ public:
 	static void updateInput(GLFWwindow* window);
 	static void updateInput(GLFWwindow* window, Mesh& mesh);
 	static void updateInput(GLFWwindow* window, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale);
-	
+	void updateMouseInput();
+
+	void updateInputCamera();
+
+
 	
 
 };

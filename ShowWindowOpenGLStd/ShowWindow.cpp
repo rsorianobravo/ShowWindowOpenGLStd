@@ -9,6 +9,7 @@ Pyramid pyramid = Pyramid();
 /*********************************************************************************************/
 
 //Private Functions
+
 void ShowWindow::initGLFW()
 {
 	//Init GLFW
@@ -86,6 +87,9 @@ void ShowWindow::initOpenGLOptions()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	//input
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 /*********************************************************************************************/
@@ -99,6 +103,8 @@ void ShowWindow::initMatrices()
 	this->ProjectionMatrix = glm::perspective(glm::radians(this->fov), static_cast<float>(this->framebufferWidth) / this->framebufferHeight, this->nearPlane, this->farPlane);
 
 }
+
+
 
 //Constructors
 
@@ -188,10 +194,8 @@ void ShowWindow::update()
 	glfwPollEvents();
 
 	this->updateInput(this->window, *this->meshers[MESH_CONTAINER]);
+	this->updateInputCamera();
 }
-
-/******************************************************************/
-
 
 /******************************************************************/
 
@@ -312,6 +316,11 @@ void ShowWindow::updateInput(GLFWwindow* window, glm::vec3& position, glm::vec3&
 
 void ShowWindow::updateInput(GLFWwindow* window, Mesh &mesh)
 {
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		mesh.move(glm::vec3(0.f, 0.f, -0.001f));
@@ -366,6 +375,26 @@ void ShowWindow::updateInput(GLFWwindow* window, Mesh &mesh)
 
 /*********************************************************************************************/
 
+void ShowWindow::updateInputCamera()
+{
+
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	{
+		this->camPosition.z -= 0.001f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	{
+		this->camPosition.z += 0.001f;
+	}
+	
+}
+
+void ShowWindow::updateMouseInput()
+{
+	
+}
+
+/*********************************************************************************************/
 
 void ShowWindow::initShaders()
 {
@@ -388,9 +417,14 @@ void ShowWindow::initTextures()
 
 	// Texture 1
 
+	this->textures.push_back(new Texture("images/1.jpg", GL_TEXTURE_2D));
+	this->textures.push_back(new Texture("images/1.jpg", GL_TEXTURE_2D));
+
+
+	// Texture 1
+
 	this->textures.push_back(new Texture("images/container.png", GL_TEXTURE_2D));
 	this->textures.push_back(new Texture("images/containers.png", GL_TEXTURE_2D));
-
 }
 
 /*********************************************************************************************/
@@ -458,14 +492,33 @@ void ShowWindow::updteUniforms()
 
 	// Update Framebuffer size and projection matrix
 
-	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
-	ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
 
-	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(ProjectionMatrix, "ProjectionMatrix");
+
+	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
+	this->ProjectionMatrix = glm::perspective(glm::radians(this->fov), static_cast<float>(this->framebufferWidth) / this->framebufferHeight, this->nearPlane, this->farPlane);
+
+	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(this->ProjectionMatrix, "ProjectionMatrix");
 
 }
 /*********************************************************************************************/
 
+void ShowWindow::updteUniformsCameraView()
+{
 
+	// Move Rotate Scale
+
+	//Update View matrix (Camera)
+	this->ViewMatrix = glm::lookAt(this->camPosition, this->camPosition + this->camFront, this->worldUp);
+	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMAtrix");
+
+	// Update Framebuffer size and projection matrix
+
+	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
+	
+	this->ProjectionMatrix = glm::perspective(glm::radians(this->fov), static_cast<float>(this->framebufferWidth) / this->framebufferHeight, this->nearPlane, this->farPlane);
+
+	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(this->ProjectionMatrix, "ProjectionMatrix");
+
+}
 
 
