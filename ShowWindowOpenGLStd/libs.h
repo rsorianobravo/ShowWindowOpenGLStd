@@ -29,4 +29,6 @@
 #include"Vertex.h"
 #include"Mesh.h"
 
+#include"Model.h"
+
 #include"Primitive.h"
