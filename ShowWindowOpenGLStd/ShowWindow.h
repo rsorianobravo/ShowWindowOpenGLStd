@@ -1,6 +1,7 @@
 #pragma once
 
 #include "libs.h"
+#include "Camera.h"
 
 
 // Enummss
@@ -53,6 +54,9 @@ private:
 	double mouseOffsetX;
 	double mouseOffsetY;
 	bool firstMouse;
+
+	//Camera
+	Camera camera;
 
 	//Matrices
 	glm::mat4 ViewMatrix;
@@ -109,6 +113,8 @@ private:
 
 	void updteUniformsCameraView();
 
+	void updteUniformsCameraViewMouse();
+
 	//Static variables
 
 public:
@@ -144,6 +150,8 @@ public:
 	void updateMouseInput();
 
 	void updateInputCamera();
+
+	void updateInputCameraMouse();
 
 	void updateDt();
 

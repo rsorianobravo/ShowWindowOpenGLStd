@@ -19,7 +19,9 @@
 #include<glm/gtc/type_ptr.hpp>
 
 enum direction {FORWARD = 0, BACKWARD = 1, LEFT = 2, RIGHT = 3};
+
 //
+
 class Camera
 {
 private:
@@ -38,6 +40,8 @@ private:
 	GLfloat yaw;
 	GLfloat roll;
 
+	/*********************************************************************************************/
+	
 	void updateCameraVectors()
 	{
 		this->front.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
@@ -51,12 +55,15 @@ private:
 	}
 
 public:
+	
+	/*********************************************************************************************/
+
 	Camera(glm::vec3 position, glm::vec3 direction, glm::vec3 worldUp)
 	{
 		this->ViewMatrix = glm::mat4(1.f);
 
-		this->movementSpeed = 0.3f;
-		this->sensivity = 0.05f;
+		this->movementSpeed = 0.5f;
+		this->sensivity = 2.5f;
 
 		this->worldUp = worldUp;
 		this->position = position;
@@ -69,19 +76,28 @@ public:
 
 		this->updateCameraVectors();
 	}
-	~Camera() 
+
+	/*********************************************************************************************/
+
+	~Camera()
 	{
 
 	}
 
 	//Accesors
+
+	/*********************************************************************************************/
+
 	const glm::mat4 getViewMatrix()
 	{
 		this->updateCameraVectors();
+
 		this->ViewMatrix = glm::lookAt(this->position, this->position + this->front, this->up);
 
 		return this->ViewMatrix;
 	}
+
+	/*********************************************************************************************/
 
 	const glm::vec3 getPosition() const
 	{
@@ -89,6 +105,15 @@ public:
 	}
 
 	//Functions
+
+	/*********************************************************************************************/
+
+	void move(const float& dt, const int direction)
+	{
+
+	}
+
+	/*********************************************************************************************/
 
 	void updateKeyboardInput(const float& dt, const int direction)
 	{
@@ -112,9 +137,12 @@ public:
 		}
 	}
 
+	/*********************************************************************************************/
+
 	void updateMouseInput(const float& dt, const double& offsetX, const double& offsetY)
 	{
 		// Update Pitch, yaw and roll
+
 		this->pitch += static_cast<GLfloat>(offsetY) * this->sensivity * dt;
 
 		this->yaw += static_cast<GLfloat>(offsetX) * this->sensivity * dt;
@@ -127,9 +155,9 @@ public:
 		if (this->yaw > 360.f || this->yaw < -360.f)
 			this->yaw = 0.f;
 
-
 	}
 
+	/*********************************************************************************************/
 
 	void updateInput(const float& dt, const int direction, const double& offsetX, const double& offsetY)
 	{

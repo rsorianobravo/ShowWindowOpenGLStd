@@ -111,7 +111,8 @@ void ShowWindow::initMatrices()
 /*********************************************************************************************/
 
 ShowWindow::ShowWindow(const char* title, const int WINDOW_WIDTH, const int WINDOW_HEIGHT, const int GL_VERSION_MAJOR, const int GL_VERSION_MINOR, bool resizable)
-	:WINDOW_WIDTH(WINDOW_WIDTH), WINDOW_HEIGHT(WINDOW_HEIGHT), GL_VERSION_MAJOR(GL_VERSION_MAJOR), GL_VERSION_MINOR(GL_VERSION_MINOR)
+	:WINDOW_WIDTH(WINDOW_WIDTH), WINDOW_HEIGHT(WINDOW_HEIGHT), GL_VERSION_MAJOR(GL_VERSION_MAJOR), GL_VERSION_MINOR(GL_VERSION_MINOR),
+	camera(glm::vec3(0.f,0.f,2.f), glm::vec3(0.f,0.f,1.f), glm::vec3(0.f,1.f,0.f))
 {
 	// Init Variables
 	this->window = nullptr;
@@ -210,6 +211,7 @@ void ShowWindow::update()
 	this->updateInput(this->window, *this->meshers[MESH_CONTAINER]);
 	this->updateInputCamera();
 	this->updateMouseInput();
+	this->updateInputCameraMouse();
 
 	if(this->mouseOffsetX > 0 || this->mouseOffsetY > 0)
 		std::cout << "DT : " << this->dt << "\n" << " OffsetX :" << this->mouseOffsetX << " OffsetY: " << this->mouseOffsetY << "\n";
@@ -218,6 +220,8 @@ void ShowWindow::update()
 	this->meshers[1]->rotate(glm::vec3(0.f, 0.01f, 0.f));
 
 	this->camPosition.z += 0.0001;
+
+	this->camera.updateInput(dt, -1, this->mouseOffsetX, this->mouseOffsetY);
 }
 
 /******************************************************************/
@@ -238,6 +242,7 @@ void ShowWindow::render()
 	// Update uniforms
 	this->updteUniforms();
 	this->updteUniformsCameraView();
+	this->updteUniformsCameraViewMouse();
 
 	// Update uniforms
 
@@ -444,6 +449,38 @@ void ShowWindow::updateInputCamera()
 
 /*********************************************************************************************/
 
+void ShowWindow::updateInputCameraMouse()
+{
+
+	if (glfwGetKey(this->window, GLFW_KEY_KP_8) == GLFW_PRESS)
+	{
+		this->camera.updateKeyboardInput(this->dt, FORWARD);
+	}
+	if (glfwGetKey(this->window, GLFW_KEY_KP_5) == GLFW_PRESS)
+	{
+		this->camera.updateKeyboardInput(this->dt, BACKWARD);
+	}
+	if (glfwGetKey(this->window, GLFW_KEY_KP_4) == GLFW_PRESS)
+	{
+		this->camera.updateKeyboardInput(this->dt, LEFT);
+	}
+	if (glfwGetKey(this->window, GLFW_KEY_KP_6) == GLFW_PRESS)
+	{
+		this->camera.updateKeyboardInput(this->dt, RIGHT);
+	}
+	if (glfwGetKey(this->window, GLFW_KEY_KP_1) == GLFW_PRESS)
+	{
+		this->camPosition.y += 0.001f;
+	}
+	if (glfwGetKey(this->window, GLFW_KEY_KP_3) == GLFW_PRESS)
+	{
+		this->camPosition.y -= 0.001f;
+	}
+
+}
+
+/*********************************************************************************************/
+
 void ShowWindow::updateDt()
 {
 	this->curTime = static_cast<float>(glfwGetTime());
@@ -558,7 +595,7 @@ void ShowWindow::initUniforms()
 
 
 	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(*this->lights[0], "lightPos0");
-	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->camPosition, "cameraPos");
+	//this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->camPosition, "cameraPos");
 }
 
 /*********************************************************************************************/
@@ -586,6 +623,8 @@ void ShowWindow::updteUniformsCameraView()
 	//Update View matrix (Camera)
 	this->ViewMatrix = glm::lookAt(this->camPosition, this->camPosition + this->camFront, this->worldUp);
 	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
+	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->camPosition, "cameraPos");
+
 
 	// Update Framebuffer size and projection matrix
 
@@ -599,5 +638,24 @@ void ShowWindow::updteUniformsCameraView()
 
 /*********************************************************************************************/
 
+void ShowWindow::updteUniformsCameraViewMouse()
+{
+
+	// Move Rotate Scale
+
+	//Update View matrix (Camera)
+	this->ViewMatrix = this->camera.getViewMatrix();
+	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
+	this->shaders[SHADER_CORE_PROGRAM]->setVec3f(this->camera.getPosition(), "cameraPos");
+
+	// Update Framebuffer size and projection matrix
+
+	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
+
+	this->ProjectionMatrix = glm::perspective(glm::radians(this->fov), static_cast<float>(this->framebufferWidth) / this->framebufferHeight, this->nearPlane, this->farPlane);
+
+	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(this->ProjectionMatrix, "ProjectionMatrix");
+
+}
 
 
