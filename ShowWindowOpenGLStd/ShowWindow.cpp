@@ -228,6 +228,8 @@ void ShowWindow::update()
 	this->camPosition.z += 0.0001;
 	*/
 	this->camera.updateInput(dt, -1, this->mouseOffsetX, this->mouseOffsetY);
+
+	// this->models[0]->rotate(glm::vec3(0.f, 0.01f, 0.f));
 }
 
 /******************************************************************/
@@ -576,11 +578,11 @@ void ShowWindow::initMeshes()
 
 	//Mesh mesh1(&triangle, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f));
 
-	this->meshers.push_back(new Mesh(&quad, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
+	// this->meshers.push_back(new Mesh(&quad, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
 
 	//this->meshers.push_back(new Mesh(&quad2, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
 
-	this->meshers.push_back(new Mesh(&pyramid, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
+	// this->meshers.push_back(new Mesh(&pyramid, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
 
 
 }
@@ -589,7 +591,26 @@ void ShowWindow::initMeshes()
 
 void ShowWindow::initModels()
 {
+	//Mesh mesh(vertices, nrOfVertices,indices,nrOfIndices, glm::vec3(0.f),glm::vec3(0.f),glm::vec3(1.f));
+
+	//Mesh mesh2(Quad().getVertices(), Quad().getNrOfVertices(), Quad().getIndices(), Quad().getNrOfIndices(), glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f));
+
+	//Mesh mesh(&quad, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f));
+
+	//Mesh mesh1(&triangle, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f));
+
+	this->meshers.push_back(new Mesh(&quad, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
+
+	//this->meshers.push_back(new Mesh(&quad2, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
+
+	this->meshers.push_back(new Mesh(&pyramid, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
+
 	this->models.push_back(new Model(glm::vec3(0.f),this->materials[0],this->textures[TEX_CONTAINER], this->textures[TEX_CONTAINERS],this->meshers));
+
+	//for (auto*& i : meshers)
+	//	delete i;
+
+	//this->meshers.clear();
 }
 
 /*********************************************************************************************/

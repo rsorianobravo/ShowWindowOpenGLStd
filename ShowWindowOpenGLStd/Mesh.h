@@ -19,6 +19,9 @@ private:
 	std::vector<Vertex> vertices;
 	std::vector <GLuint> indices;
 
+	Vertex* vertexArray;
+	GLuint* indexArray;
+
 	unsigned nrOfVertices;
 	unsigned nrOfIndices;
 
@@ -31,7 +34,9 @@ private:
 	glm::vec3 scale;
 
 	glm::mat4 ModelMatrix;
-
+	
+	/*********************************************************************************************/
+	
 	void initVertexData(Vertex* vertexArray, const unsigned& nrOfVertices, GLuint* indexArray, const unsigned& nrOfIndices)
 	{
 		for (size_t i = 0; i < nrOfVertices; i++)
@@ -44,6 +49,8 @@ private:
 			this->indices.push_back(indexArray[i]);
 		}
 	}
+
+	/*********************************************************************************************/
 
 	void initVAO(Vertex* vertexArray, const unsigned& nrOfVertices, GLuint* indexArray, const unsigned& nrOfIndices)
 	{
@@ -99,7 +106,9 @@ private:
 		glBindVertexArray(0);
 	}
 
-	void initVAO()
+	/*********************************************************************************************/
+
+	void initVAOFirst()
 	{
 		// ------ VAO VBO EBO
 		//GLuint VAO;
@@ -151,6 +160,8 @@ private:
 		// Bind VAO 0
 		glBindVertexArray(0);
 	}
+
+	/*********************************************************************************************/
 
 	void initVAO(Primitive* primitive)
 	{
@@ -208,6 +219,56 @@ private:
 		glBindVertexArray(0);
 	}
 
+	/*********************************************************************************************/
+
+	void initVAO()
+	{
+
+		// ------ Gen VAO and Bind
+		glCreateVertexArrays(1, &this->VAO);
+		glBindVertexArray(this->VAO);
+
+		// ------ Gen VBO and Bind and send data
+		glGenBuffers(1, &this->VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+		glBufferData(GL_ARRAY_BUFFER, this->nrOfVertices * sizeof(Vertex), this->vertexArray, GL_STATIC_DRAW);
+
+		// ------ Gen EBO and Bind and send data
+		if (this->nrOfIndices > 0)
+		{
+			glGenBuffers(1, &this->EBO);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->nrOfIndices * sizeof(GLuint), this->indexArray , GL_STATIC_DRAW);
+		}
+
+		// ------ Set Vertex Attribute Pointers and Enable
+
+		/* If the location is not defined in the vertex core file....
+		GLuint attribLoc = glGetAttribLocation(core_program, "vertex_position");
+		glVertexAttribPointer(attribLoc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+		glEnableVertexAttribArray(attribLoc);
+		*/
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
+		glEnableVertexAttribArray(1);
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texcoord));
+		glEnableVertexAttribArray(2);
+
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
+		glEnableVertexAttribArray(3);
+
+
+
+		// Bind VAO 0
+		glBindVertexArray(0);
+	}
+
+	/*********************************************************************************************/
 
 	void initModelMatrix()
 	{
@@ -238,10 +299,14 @@ private:
 		this->ModelMatrix = glm::scale(this->ModelMatrix, this->scale);
 	}
 
+	/*********************************************************************************************/
+
 	void updateUniforms(Shader* shader)
 	{
 		shader->setMat4fv(this->ModelMatrix, "ModelMatrix");
 	}
+
+	/*********************************************************************************************/
 
 	void updateModelMatrix()
 	{
@@ -266,6 +331,8 @@ private:
 
 		this->ModelMatrix = glm::scale(this->ModelMatrix, this->scale);
 	}
+	
+	/*********************************************************************************************/
 
 public:
 	Mesh(Vertex* vertexArray, const unsigned& nrOfVertices, GLuint* indexArray, const unsigned& nrOfIndices, glm::vec3 position = glm::vec3(0.f), glm::vec3 rotation = glm::vec3(0.f), glm::vec3 scale = glm::vec3(1.f))
@@ -278,10 +345,30 @@ public:
 		this->rotation = rotation;
 		this->scale = scale;
 
-		this->initVAO(vertexArray, nrOfVertices, indexArray, nrOfIndices);
+		this->nrOfVertices = nrOfVertices;
+		this->nrOfIndices = nrOfIndices;
+		
+		this->vertexArray = new Vertex[this->nrOfVertices];
+		for (size_t i = 0; i < nrOfVertices; i++)
+		{
+			this->vertexArray[i] = vertexArray[i];
+		}
+		this->indexArray = new GLuint[this->nrOfIndices];
+		for (size_t i = 0; i < nrOfIndices; i++)
+		{
+			this->indexArray[i] = indexArray[i];
+		}
+
+		//this->initVAO(vertexArray, nrOfVertices, indexArray, nrOfIndices);
+		//this->initVAO(this->vertexArray, this->nrOfVertices, this->indexArray, this->nrOfIndices);
+
+		this->initVAO();
+
 		//this->initModelMatrix();
 		this->updateModelMatrix();
 	}
+
+	/*********************************************************************************************/
 
 	Mesh(Primitive* primitive, glm::vec3 position = glm::vec3(0.f), glm::vec3 rotation = glm::vec3(0.f), glm::vec3 scale = glm::vec3(1.f))
 	{
@@ -293,10 +380,57 @@ public:
 		this->rotation = rotation;
 		this->scale = scale;
 
-		this->initVAO(primitive);
+		this->nrOfVertices = primitive->getNrOfVertices();
+		this->nrOfIndices = primitive->getNrOfIndices();;
+
+		this->vertexArray = new Vertex[this->nrOfVertices];
+		for (size_t i = 0; i < this->nrOfVertices; i++)
+		{
+			this->vertexArray[i] = primitive->getVertices()[i];
+		}
+		this->indexArray = new GLuint[this->nrOfIndices];
+		for (size_t i = 0; i < this->nrOfIndices; i++)
+		{
+			this->indexArray[i] = primitive->getIndices()[i];
+		}
+
+		//this->initVAO(primitive);
 		//this->initModelMatrix();
+		
+		this->initVAO();
 		this->updateModelMatrix();
 	}
+
+	/*********************************************************************************************/
+
+	Mesh(Mesh& obj)
+	{
+		this->position = obj.position;
+		this->rotation = obj.rotation;
+		this->scale = obj.scale;
+
+		this->nrOfVertices = obj.nrOfVertices;
+		this->nrOfIndices = obj.nrOfIndices;
+
+		this->vertexArray = new Vertex[this->nrOfVertices];
+		for (size_t i = 0; i < this->nrOfVertices; i++)
+		{
+			this->vertexArray[i] = obj.vertexArray[i];
+		}
+		this->indexArray = new GLuint[this->nrOfIndices];
+		for (size_t i = 0; i < this->nrOfIndices; i++)
+		{
+			this->indexArray[i] = obj.indexArray[i];
+		}
+
+		//this->initVAO(primitive);
+		//this->initModelMatrix();
+
+		this->initVAO();
+		this->updateModelMatrix();
+	}
+
+	/*********************************************************************************************/
 
 	~Mesh()
 	{
@@ -306,7 +440,12 @@ public:
 		{
 			glDeleteBuffers(1, &this->EBO);
 		}
+
+		delete[] this->vertexArray;
+		delete[] this->indexArray;
 	}
+	
+	/*********************************************************************************************/
 
 	// Accesors
 
@@ -316,39 +455,55 @@ public:
 		this->position = position;
 	}
 	
+	/*********************************************************************************************/
+
 	void setRotation(const glm::vec3 rotation)
 	{
 		this->rotation = rotation;
 	}
+
+	/*********************************************************************************************/
 
 	void setScale(const glm::vec3 scale)
 	{
 		this->scale = scale;
 	}
 
+	/*********************************************************************************************/
+
 	// Functions
+
+	/*********************************************************************************************/
 
 	void move(const glm::vec3 position)
 	{
 		this->position += position;
 	}
 
+	/*********************************************************************************************/
+
 	void rotate(const glm::vec3 rotation)
 	{
 		this->rotation += rotation;
 	}
+
+	/*********************************************************************************************/
 
 	void scaleUpdate(const glm::vec3 scale)
 	{
 		this->scale += scale;
 	}
 
+	/*********************************************************************************************/
+
 	void update()
 	{
 
 	}
 
-	void render(Shader* shader) 
+	/*********************************************************************************************/
+
+	void render(Shader* shader)
 	{
 		
 		this->updateModelMatrix();
@@ -376,9 +531,8 @@ public:
 		glActiveTexture(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-
-
-
 	}
+
+	/*********************************************************************************************/
 
 };
