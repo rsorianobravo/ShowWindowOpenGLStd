@@ -82,6 +82,9 @@ private:
 	//Meshers
 	std::vector<Mesh*> meshers;
 
+	//Models
+	std::vector<Model*> models;
+
 	//Lights
 	std::vector<glm::vec3*> lights;
 
@@ -104,6 +107,8 @@ private:
 	void initMaterials();
 
 	void initMeshes();
+
+	void initModels();
 
 	void initLights();
 

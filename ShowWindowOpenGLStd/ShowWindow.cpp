@@ -150,6 +150,7 @@ ShowWindow::ShowWindow(const char* title, const int WINDOW_WIDTH, const int WIND
 	this->initTextures();
 	this->initMaterials();
 	this->initMeshes();
+	this->initModels();
 	this->initLights();
 	this->initUniforms();
 
@@ -176,6 +177,10 @@ ShowWindow::~ShowWindow()
 	for (size_t i = 0; i < this->meshers.size(); i++)
 	{
 		delete this->meshers[i];
+	}
+	for (auto*& i : this->models)
+	{
+		delete i;
 	}
 	for (size_t i = 0; i < this->lights.size(); i++)
 	{
@@ -213,6 +218,7 @@ void ShowWindow::update()
 	this->updateMouseInput();
 	this->updateInputCameraMouse();
 
+	/*
 	if(this->mouseOffsetX > 0 || this->mouseOffsetY > 0)
 		std::cout << "DT : " << this->dt << "\n" << " OffsetX :" << this->mouseOffsetX << " OffsetY: " << this->mouseOffsetY << "\n";
 
@@ -220,7 +226,7 @@ void ShowWindow::update()
 	this->meshers[1]->rotate(glm::vec3(0.f, 0.01f, 0.f));
 
 	this->camPosition.z += 0.0001;
-
+	*/
 	this->camera.updateInput(dt, -1, this->mouseOffsetX, this->mouseOffsetY);
 }
 
@@ -269,6 +275,9 @@ void ShowWindow::render()
 	this->textures[TEX_CONTAINER]->bind(0);
 	this->textures[TEX_CONTAINERS]->bind(1);
 	this->meshers[MESH_CONTAINER]->render(this->shaders[SHADER_CORE_PROGRAM]);
+
+	// Render Models
+	this->models[0]->render(this->shaders[SHADER_CORE_PROGRAM]);
 
 	// ------ End Draw
 	glfwSwapBuffers(window);
@@ -574,6 +583,13 @@ void ShowWindow::initMeshes()
 	this->meshers.push_back(new Mesh(&pyramid, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)));
 
 
+}
+
+/*********************************************************************************************/
+
+void ShowWindow::initModels()
+{
+	this->models.push_back(new Model(glm::vec3(0.f),this->materials[0],this->textures[TEX_CONTAINER], this->textures[TEX_CONTAINERS],this->meshers));
 }
 
 /*********************************************************************************************/
