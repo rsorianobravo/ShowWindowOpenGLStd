@@ -132,6 +132,7 @@ public:
 	void update();
 	void render();
 	void updateInput();
+	void updateKeyboardInput();
 
 	//Static Functions
 	static void framebuffer_resize_callback(GLFWwindow* wimdow, int fbw, int fbh);

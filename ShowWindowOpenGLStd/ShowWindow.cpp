@@ -211,7 +211,8 @@ void ShowWindow::update()
 	this->updateInputCamera();
 	this->updateMouseInput();
 
-	std::cout << "DT : " << this->dt << "\n" << " OffsetX :" << this->mouseOffsetX << " OffsetY: " << this->mouseOffsetY << "\n";
+	if(this->mouseOffsetX > 0 || this->mouseOffsetY > 0)
+		std::cout << "DT : " << this->dt << "\n" << " OffsetX :" << this->mouseOffsetX << " OffsetY: " << this->mouseOffsetY << "\n";
 
 	//this->meshers[0]->rotate(glm::vec3(0.f, 0.01f, 0.f));
 	//this->meshers[1]->rotate(glm::vec3(0.f, 0.01f, 0.f));
@@ -283,6 +284,18 @@ void ShowWindow::render()
 void ShowWindow::framebuffer_resize_callback(GLFWwindow* wimdow, int fbw, int fbh)
 {
 	glViewport(0, 0, fbw, fbh);
+}
+
+/*********************************************************************************************/
+
+void ShowWindow::updateInput()
+{
+
+}
+
+void ShowWindow::updateKeyboardInput()
+{
+
 }
 
 /*********************************************************************************************/
@@ -585,8 +598,5 @@ void ShowWindow::updteUniformsCameraView()
 
 /*********************************************************************************************/
 
-void ShowWindow::updateInput()
-{
 
-}
 
