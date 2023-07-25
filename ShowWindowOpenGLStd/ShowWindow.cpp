@@ -89,7 +89,7 @@ void ShowWindow::initOpenGLOptions()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	//input
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }
 
 /*********************************************************************************************/
@@ -235,6 +235,7 @@ void ShowWindow::render()
 
 	// Update uniforms
 	this->updteUniforms();
+	this->updteUniformsCameraView();
 
 	// Update uniforms
 
@@ -272,6 +273,7 @@ void ShowWindow::render()
 	glActiveTexture(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
+
 
 /*********************************************************************************************/
 
@@ -399,15 +401,31 @@ void ShowWindow::updateInput(GLFWwindow* window, Mesh &mesh)
 void ShowWindow::updateInputCamera()
 {
 
-	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
-	{
-		this->camPosition.z -= 0.001f;
-	}
-	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	if (glfwGetKey(this->window, GLFW_KEY_KP_8) == GLFW_PRESS)
 	{
 		this->camPosition.z += 0.001f;
 	}
-	
+	if (glfwGetKey(this->window, GLFW_KEY_KP_5) == GLFW_PRESS)
+	{
+		this->camPosition.z -= 0.001f;
+	}
+	if (glfwGetKey(this->window, GLFW_KEY_KP_4) == GLFW_PRESS)
+	{
+		this->camPosition.x -= 0.001f;
+	}
+	if (glfwGetKey(this->window, GLFW_KEY_KP_6) == GLFW_PRESS)
+	{
+		this->camPosition.x += 0.001f;
+	}
+	if (glfwGetKey(this->window, GLFW_KEY_KP_1) == GLFW_PRESS)
+	{
+		this->camPosition.y += 0.001f;
+	}
+	if (glfwGetKey(this->window, GLFW_KEY_KP_3) == GLFW_PRESS)
+	{
+		this->camPosition.y -= 0.001f;
+	}
+
 }
 
 /*********************************************************************************************/
@@ -534,12 +552,9 @@ void ShowWindow::initUniforms()
 void ShowWindow::updteUniforms()
 {
 
-
 	// Move Rotate Scale
 
 	// Update Framebuffer size and projection matrix
-
-
 
 	glfwGetFramebufferSize(this->window, &this->framebufferWidth, &this->framebufferHeight);
 	this->ProjectionMatrix = glm::perspective(glm::radians(this->fov), static_cast<float>(this->framebufferWidth) / this->framebufferHeight, this->nearPlane, this->farPlane);
@@ -556,7 +571,7 @@ void ShowWindow::updteUniformsCameraView()
 
 	//Update View matrix (Camera)
 	this->ViewMatrix = glm::lookAt(this->camPosition, this->camPosition + this->camFront, this->worldUp);
-	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMAtrix");
+	this->shaders[SHADER_CORE_PROGRAM]->setMat4fv(this->ViewMatrix, "ViewMatrix");
 
 	// Update Framebuffer size and projection matrix
 
@@ -568,4 +583,10 @@ void ShowWindow::updteUniformsCameraView()
 
 }
 
+/*********************************************************************************************/
+
+void ShowWindow::updateInput()
+{
+
+}
 
